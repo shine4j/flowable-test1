@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+    <process id="leave" name="请假流程" isExecutable="true">
+        <startEvent id="startEvent1"></startEvent>
+        <userTask id="sid-66412AF3-D400-4265-8F58-9318556C5F6D" name="主管审批" flowable:assignee="001">
+            <extensionElements>
+                <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+            </extensionElements>
+        </userTask>
+        <userTask id="sid-898703C7-1EDA-40C2-8D62-BFCAE38128B4" name="经理审批" flowable:assignee="002">
+            <extensionElements>
+                <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+            </extensionElements>
+        </userTask>
+        <endEvent id="sid-E011510C-DCED-4F7F-949F-BF319510E20E"></endEvent>
+        <sequenceFlow id="sid-80D3192A-3DE1-4928-A038-F3DC2E215EF4" sourceRef="sid-898703C7-1EDA-40C2-8D62-BFCAE38128B4" targetRef="sid-E011510C-DCED-4F7F-949F-BF319510E20E"></sequenceFlow>
+        <userTask id="sid-29E60D9A-A766-41D3-8869-080DBDB45268" name="提交人" flowable:assignee="${initiator}" flowable:skipExpression="${skip}">
+            <extensionElements>
+                <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-5A3D147D-9DE7-4F46-A731-3278E6B86E20" sourceRef="startEvent1" targetRef="sid-29E60D9A-A766-41D3-8869-080DBDB45268"></sequenceFlow>
+        <sequenceFlow id="sid-B2F50F6C-30FB-4B1A-966D-8AFA8D23A44D" name="提交人到主管线" sourceRef="sid-29E60D9A-A766-41D3-8869-080DBDB45268" targetRef="sid-66412AF3-D400-4265-8F58-9318556C5F6D"></sequenceFlow>
+        <sequenceFlow id="sid-D5F0D9C4-903C-44E9-9A0D-21BDC81EE2FD" name="主管到经理线" sourceRef="sid-66412AF3-D400-4265-8F58-9318556C5F6D" targetRef="sid-898703C7-1EDA-40C2-8D62-BFCAE38128B4"></sequenceFlow>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_leave">
+        <bpmndi:BPMNPlane bpmnElement="leave" id="BPMNPlane_leave">
+            <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+                <omgdc:Bounds height="30.0" width="30.0" x="75.0" y="75.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-66412AF3-D400-4265-8F58-9318556C5F6D" id="BPMNShape_sid-66412AF3-D400-4265-8F58-9318556C5F6D">
+                <omgdc:Bounds height="80.0" width="100.0" x="377.0" y="50.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-898703C7-1EDA-40C2-8D62-BFCAE38128B4" id="BPMNShape_sid-898703C7-1EDA-40C2-8D62-BFCAE38128B4">
+                <omgdc:Bounds height="80.0" width="100.0" x="614.5" y="50.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-E011510C-DCED-4F7F-949F-BF319510E20E" id="BPMNShape_sid-E011510C-DCED-4F7F-949F-BF319510E20E">
+                <omgdc:Bounds height="28.0" width="28.0" x="759.5" y="76.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-29E60D9A-A766-41D3-8869-080DBDB45268" id="BPMNShape_sid-29E60D9A-A766-41D3-8869-080DBDB45268">
+                <omgdc:Bounds height="80.0" width="100.0" x="150.0" y="50.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sid-5A3D147D-9DE7-4F46-A731-3278E6B86E20" id="BPMNEdge_sid-5A3D147D-9DE7-4F46-A731-3278E6B86E20">
+                <omgdi:waypoint x="104.94999848995758" y="90.0"></omgdi:waypoint>
+                <omgdi:waypoint x="150.0" y="90.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-D5F0D9C4-903C-44E9-9A0D-21BDC81EE2FD" id="BPMNEdge_sid-D5F0D9C4-903C-44E9-9A0D-21BDC81EE2FD">
+                <omgdi:waypoint x="476.949999999973" y="90.0"></omgdi:waypoint>
+                <omgdi:waypoint x="614.5" y="90.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-80D3192A-3DE1-4928-A038-F3DC2E215EF4" id="BPMNEdge_sid-80D3192A-3DE1-4928-A038-F3DC2E215EF4">
+                <omgdi:waypoint x="714.4499999999791" y="90.0"></omgdi:waypoint>
+                <omgdi:waypoint x="759.5" y="90.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-B2F50F6C-30FB-4B1A-966D-8AFA8D23A44D" id="BPMNEdge_sid-B2F50F6C-30FB-4B1A-966D-8AFA8D23A44D">
+                <omgdi:waypoint x="249.94999999998987" y="90.0"></omgdi:waypoint>
+                <omgdi:waypoint x="376.99999999996487" y="90.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>
