@@ -1,6 +1,7 @@
 package com.ctgu;
 
 
+import com.alibaba.fastjson.JSON;
 import com.ctgu.dao.HisFlowableActinstDao;
 import com.ctgu.dao.RunFlowableActinstDao;
 import org.flowable.bpmn.model.*;
@@ -15,6 +16,9 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.flowable.task.service.impl.persistence.entity.TaskEntity;
 import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
+import org.flowable.ui.modeler.domain.AbstractModel;
+import org.flowable.ui.modeler.domain.Model;
+import org.flowable.ui.modeler.serviceapi.ModelService;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +66,8 @@ public class ActiviTest {
     HisFlowableActinstDao hisFlowableActinstDao;
 
 
+    @Autowired
+    ModelService modelService;
 
     public void deploy() throws FileNotFoundException {
         Deployment deploy = repositoryService.createDeployment()
@@ -277,6 +283,45 @@ public class ActiviTest {
         }
     }
 
+    //查询所有的流程设置
+    public void modeler(){
+        List<AbstractModel> list = modelService.getModelsByModelType(0);
+        list.forEach(s->{
+            logger.info("modelerId:{}", s.getId());
+            logger.info("ModelKey:{}", s.getKey());
+            logger.info("modelerName:{}", s.getName());
+            logger.info("ModelType:{}", s.getModelType());
+        });
+
+    }
+
+    public void deployModler(){
+        String modelId="0f00acfb-c3a7-11ec-b3bc-025041000001";
+        Model model = modelService.getModel(modelId);
+        BpmnModel bpmnModel = modelService.getBpmnModel(model);
+        repositoryService.createDeployment()
+                .name(model.getName())
+                .key(model.getKey())
+                .category(model.getDescription())
+                .addBpmnModel(model.getKey() + ".bpmn", bpmnModel)
+                .deploy();
+    }
+
+    public void deploymoderAll(){
+        List<Deployment> list = repositoryService.createDeploymentQuery().list();
+        list.forEach(s->{
+            logger.info("deployId:{}",s.getId());
+            logger.info("deployName:{}",s.getName());
+            logger.info("deployTenantId:{}",s.getTenantId());
+        });
+
+    }
+
+    public void delDeploymoder(){
+
+        repositoryService.deleteDeployment("876296eb-c3a8-11ec-8738-025041000001");
+    }
+
     @Test
     public void test() throws Exception{
         //deploy();
@@ -288,13 +333,17 @@ public class ActiviTest {
         //TaskEntityImpl task = getTaskById("47a85908-bc60-11ec-a156-025041000001");
         //createSubTask(task, "002");
         //completeAllTask();
-       // doStopInstance();
+        //doStopInstance();
         //taskService.resolveTask("378634f9-bc5f-11ec-9131-025041000001");
-        taskService.complete("145115bd-c216-11ec-9de2-025041000001");
+        //taskService.complete("145115bd-c216-11ec-9de2-025041000001");
         //myTask("001");
         //myTask("002");
         //backNodes("ecc3347f-c20a-11ec-a764-025041000001");
         //back("3cf376a1-c20b-11ec-baea-025041000001","sid-5D1F91EB-4019-48ED-B0E7-AE948451C539");
-        allTask();
+        //allTask();
+        //modeler();
+        deployModler();
+        //deploymoderAll();
+        //delDeploymoder();
     }
 }
