@@ -71,6 +71,9 @@ public class ActiviTest {
     @Autowired
     ModelService modelService;
 
+    @Autowired
+    HistoryService historyService;
+
     public void deploy() throws FileNotFoundException {
         Deployment deploy = repositoryService.createDeployment()
                 .addClasspathResource("leave.bpmn20.xml")
@@ -95,8 +98,14 @@ public class ActiviTest {
         //assignList.add("001");
         //assignList.add("002");
         //varMap.put("assignList", assignList);
+
+        //动态传入审批人
+        //varMap.put("director", "001");
+        //varMap.put("manager", "002");
+        //end
+
         varMap.put("_FLOWABLE_SKIP_EXPRESSION_ENABLED", true);
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey("leave",varMap);
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey("order",varMap);
         logger.info("businessKey:{}", instance.getBusinessKey());
         logger.info("id:{}", instance.getId());
         logger.info("definitionId:{}", instance.getProcessDefinitionId());
@@ -105,7 +114,7 @@ public class ActiviTest {
 
 
     public void myTask(String userId) {
-        List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned(userId).taskCandidateUser(userId).list();
+        List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned(userId).list();
         if (null != tasks && tasks.size() > 0) {
             tasks.stream().forEach(s -> {
                 logger.info("************************************");
@@ -298,15 +307,19 @@ public class ActiviTest {
     }
 
     public void deployModler(){
-        String modelId="0f00acfb-c3a7-11ec-b3bc-025041000001";
+        String modelId="8633904b-c440-11ec-bb14-025041000001";
         Model model = modelService.getModel(modelId);
         BpmnModel bpmnModel = modelService.getBpmnModel(model);
-        repositoryService.createDeployment()
+        Deployment deploy = repositoryService.createDeployment()
                 .name(model.getName())
                 .key(model.getKey())
                 .category(model.getDescription())
                 .addBpmnModel(model.getKey() + ".bpmn", bpmnModel)
                 .deploy();
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().deploymentId(deploy.getId()).singleResult();
+        logger.info("deplpyId:{}", deploy.getId());
+        logger.info("processDefinitionId:{}", processDefinition.getId());
+        logger.info("processDefinitionKey:{}", processDefinition.getKey());
     }
 
     public void deploymoderAll(){
@@ -324,6 +337,15 @@ public class ActiviTest {
         repositoryService.deleteDeployment("876296eb-c3a8-11ec-8738-025041000001");
     }
 
+    public void getStartUser(){
+        String startUserId = historyService
+                .createHistoricProcessInstanceQuery()
+                .processInstanceId("397946b9-c436-11ec-a739-025041000001")
+                .singleResult()
+                .getStartUserId();
+        logger.info("startUserId:{}",startUserId);
+
+    }
 
 
     @Test
@@ -337,17 +359,18 @@ public class ActiviTest {
         //TaskEntityImpl task = getTaskById("47a85908-bc60-11ec-a156-025041000001");
         //createSubTask(task, "002");
         //completeAllTask();
-        //doStopInstance();
+         //doStopInstance();
         //taskService.resolveTask("378634f9-bc5f-11ec-9131-025041000001");
-        //taskService.complete("145115bd-c216-11ec-9de2-025041000001");
-        //myTask("001");
+        //taskService.complete("296c2ab8-c438-11ec-9e4c-025041000001");
+        myTask("001");
         //myTask("002");
         //backNodes("ecc3347f-c20a-11ec-a764-025041000001");
         //back("3cf376a1-c20b-11ec-baea-025041000001","sid-5D1F91EB-4019-48ED-B0E7-AE948451C539");
         //allTask();
         //modeler();
-        deployModler();
+        //deployModler();
         //deploymoderAll();
         //delDeploymoder();
+        //getStartUser();
     }
 }
