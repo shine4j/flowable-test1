@@ -2,32 +2,33 @@ package com.ctgu;
 
 
 import com.alibaba.fastjson.JSON;
+import com.ctgu.PO.RolePO;
+import com.ctgu.cmd.CurrenApplyUserCmd;
+import com.ctgu.cmd.LastApplyUserCmd;
 import com.ctgu.dao.HisFlowableActinstDao;
 import com.ctgu.dao.RunFlowableActinstDao;
 import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
+import org.flowable.common.engine.api.query.QueryProperty;
 import org.flowable.engine.*;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.impl.persistence.entity.ActivityInstanceEntity;
+import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ActivityInstance;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
-import org.flowable.identitylink.service.HistoricIdentityLinkService;
-import org.flowable.identitylink.service.impl.persistence.entity.HistoricIdentityLinkEntityImpl;
-import org.flowable.identitylink.service.impl.persistence.entity.HistoricIdentityLinkEntityManager;
 import org.flowable.identitylink.service.impl.persistence.entity.IdentityLinkEntity;
-import org.flowable.identitylink.service.impl.persistence.entity.IdentityLinkEntityManagerImpl;
 import org.flowable.task.api.Task;
-import org.flowable.task.service.HistoricTaskService;
+import org.flowable.task.api.history.HistoricTaskInstance;
 import org.flowable.task.service.impl.persistence.entity.TaskEntity;
 import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
 import org.flowable.ui.modeler.domain.AbstractModel;
 import org.flowable.ui.modeler.domain.Model;
 import org.flowable.ui.modeler.serviceapi.ModelService;
-import org.flowable.variable.api.history.HistoricVariableInstance;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.CollectionUtils;
 
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -81,8 +80,7 @@ public class ActiviTest {
 
     @Autowired
     HistoryService historyService;
-    @Autowired
-    HistoricIdentityLinkEntityImpl historicIdentityLinkEntity;
+
 
     public void deploy() throws FileNotFoundException {
         Deployment deploy = repositoryService.createDeployment()
@@ -317,7 +315,7 @@ public class ActiviTest {
     }
 
     public void deployModler(){
-        String modelId="2dcbb48c-c45d-11ec-863f-025041000001";
+        String modelId="8633904b-c440-11ec-bb14-025041000001";
         Model model = modelService.getModel(modelId);
         BpmnModel bpmnModel = modelService.getBpmnModel(model);
         Deployment deploy = repositoryService.createDeployment()
@@ -357,13 +355,12 @@ public class ActiviTest {
 
     }
 
-
     public void noFish(){
         List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().unfinished().list();
         list.forEach(s->{
             logger.info("流程名称:{}",s.getProcessDefinitionName());
-            logger.info("id:{}",s.getId());
-            logger.info("StartUserId:{}",s.getStartUserId());
+            logger.info("实例id:{}",s.getId());
+            logger.info("发起人:{}",s.getStartUserId());
 
             List<ActivityInstance> tasks = runtimeService.createActivityInstanceQuery()
                     .processInstanceId(s.getId())
@@ -371,13 +368,32 @@ public class ActiviTest {
                     .activityType("userTask")
                     .list();
             tasks.forEach(k->{
-                logger.info("Assignee:{}",k.getAssignee());
-                logger.info("ProcessInstanceId:{}",k.getProcessInstanceId());
                 logger.info("ActivityName:{}",k.getActivityName());
-
-
+                logger.info("taskId:{}",k.getTaskId());
+                if(StringUtils.isBlank(k.getAssignee())){
+                    List<RolePO> users = managementService.executeCommand(new CurrenApplyUserCmd(k.getTaskId()));
+                    logger.info("当前审批人：{}", JSON.toJSONString(users));
+                }else{
+                    logger.info("当前审批人：{}", k.getAssignee());
+                }
             });
         });
+    }
+
+    public void lastApplyUser(){
+        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
+                .processInstanceId("7ad58692-c542-11ec-b6f5-025041000001")
+                .finished()
+                .orderByHistoricTaskInstanceEndTime()
+                .desc()
+                .list();
+        if(!StringUtils.isBlank(list.get(0).getAssignee())){
+            logger.info("上个节点的审批人：{}",list.get(0).getAssignee());
+        }else{
+            List<RolePO> users = managementService.executeCommand(new LastApplyUserCmd(list.get(0).getId()));
+            logger.info("上个节点审批人：{}", JSON.toJSONString(users));
+        }
+
     }
 
 
@@ -394,7 +410,7 @@ public class ActiviTest {
         //completeAllTask();
          //doStopInstance();
         //taskService.resolveTask("378634f9-bc5f-11ec-9131-025041000001");
-        //taskService.complete("296c2ab8-c438-11ec-9e4c-025041000001");
+        taskService.complete("7ada8fae-c542-11ec-b6f5-025041000001");
         //myTask("001");
         //myTask("002");
         //backNodes("ecc3347f-c20a-11ec-a764-025041000001");
@@ -405,6 +421,7 @@ public class ActiviTest {
         //deploymoderAll();
         //delDeploymoder();
         //getStartUser();
+        lastApplyUser();
         noFish();
     }
 }

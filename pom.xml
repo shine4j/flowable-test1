@@ -11,6 +11,7 @@
     <properties>
         <spring-boot.version>2.5.12</spring-boot.version>
         <flowable.version>6.4.2</flowable.version>
+        <fastjson.version>1.2.73</fastjson.version>
     </properties>
 
     <dependencyManagement>
@@ -87,6 +88,11 @@
             <groupId>org.flowable</groupId>
             <artifactId>flowable-image-generator</artifactId>
             <version>${flowable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
         </dependency>
     </dependencies>
     <build>
