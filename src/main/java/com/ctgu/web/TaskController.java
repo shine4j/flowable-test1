@@ -33,5 +33,8 @@ public class TaskController {
         return iTaskService.getTask();
     }
 
-
+    @GetMapping("getBackNodes")
+    public ResultMsgBO getBackNodes(String processInstanceId){
+        return iTaskService.getBackNodes(processInstanceId);
+    }
 }

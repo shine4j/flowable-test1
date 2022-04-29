@@ -10,4 +10,10 @@ import com.ctgu.BO.ResultMsgBO;
 public interface ITaskService {
 
     ResultMsgBO getTask();
+
+    ResultMsgBO getBackNodes(String processInstanceId);
+
+    ResultMsgBO doComplete(String taskId);
+
+    ResultMsgBO  doBack(String taskId, String distFlowElementId);
 }
