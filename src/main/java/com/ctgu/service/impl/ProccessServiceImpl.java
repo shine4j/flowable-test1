@@ -1,7 +1,9 @@
 package com.ctgu.service.impl;
 
+import com.ctgu.BO.ResultMsgBO;
 import com.ctgu.service.IProcessService;
 import com.ctgu.util.FlowProcessDiagramGenerator;
+import com.ctgu.util.TaskUtils;
 import org.flowable.bpmn.constants.BpmnXMLConstants;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.common.engine.impl.util.IoUtil;
@@ -10,14 +12,15 @@ import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricProcessInstance;
+import org.flowable.engine.runtime.ActivityInstance;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author beck_guo
@@ -35,6 +38,9 @@ public class ProccessServiceImpl implements IProcessService {
 
     @Autowired
     protected RepositoryService repositoryService;
+
+    @Autowired
+    private TaskUtils taskUtils;
 
 
     @Autowired
@@ -75,5 +81,24 @@ public class ProccessServiceImpl implements IProcessService {
         byte[] b = IoUtil.readInputStream(inputStream, "image inputStream name");
         response.setHeader("Content-Type", "image/png");
         response.getOutputStream().write(b);
+    }
+
+    @Override
+    public ResultMsgBO getBackNodes(String processInstanceId) {
+        List<ActivityInstance> userTask = runtimeService.createActivityInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .activityType("userTask")
+                .finished()
+                .list();
+        List<ActivityInstance> list = userTask.stream().filter(taskUtils.distinctByKey(ActivityInstance::getActivityId)).sorted(Comparator.comparing(ActivityInstance::getEndTime)).collect(Collectors.toList());
+        List<Map<String,Object>> nodes = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o->{
+                    Map<String,Object> map =  new HashMap<>();
+                    map.put("activityId",o.getActivityId());
+                    map.put("name",o.getActivityName());
+                    nodes.add(map);
+                });
+        return new ResultMsgBO(0,"ok",nodes);
     }
 }

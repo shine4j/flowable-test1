@@ -1,7 +1,6 @@
 package com.ctgu.service;
 
-import org.springframework.web.bind.annotation.PathVariable;
-
+import com.ctgu.BO.ResultMsgBO;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -12,7 +11,32 @@ import java.io.IOException;
  */
 public interface IModerService {
 
-    void getImageById(@PathVariable String modeId, HttpServletResponse resp) throws IOException;
+    /**
+     * 得到流程定义图片
+     * @param modeId
+     * @param resp
+     * @throws IOException
+     */
+    void getImageById(String modeId, HttpServletResponse resp) throws IOException;
 
-    void getXmlById(@PathVariable String modeId, HttpServletResponse resp);
+    /**
+     * 得到流程定义xml
+     * @param modeId
+     * @param resp
+     */
+    void getXmlById(String modeId, HttpServletResponse resp);
+
+    /**
+     * 得到所有流程的定义
+     * @return
+     */
+    ResultMsgBO getAllModer();
+
+    /**
+     * 部署流程定义
+     * @param moderId
+     * @return
+     */
+    ResultMsgBO  deployModerById(String moderId);
+
 }

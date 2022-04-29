@@ -9,11 +9,32 @@ import com.ctgu.BO.ResultMsgBO;
  */
 public interface ITaskService {
 
+    /**
+     * 查询所有任务
+     * @return
+     */
     ResultMsgBO getTask();
 
-    ResultMsgBO getBackNodes(String processInstanceId);
-
+    /**
+     * 通过任务
+     * @param taskId
+     * @return
+     */
     ResultMsgBO doComplete(String taskId);
 
-    ResultMsgBO  doBack(String taskId, String distFlowElementId);
+    /**
+     * 回退任务
+     * @param taskId
+     * @param distFlowElementId
+     * @return
+     */
+    ResultMsgBO doBack(String taskId, String distFlowElementId);
+
+    /**
+     * 委派任务
+     * @param taskId
+     * @param userId
+     * @return
+     */
+    ResultMsgBO doDelegateTask(String taskId, String userId);
 }

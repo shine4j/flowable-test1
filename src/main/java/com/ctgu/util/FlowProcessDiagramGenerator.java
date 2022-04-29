@@ -2,7 +2,6 @@ package com.ctgu.util;
 
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.image.impl.DefaultProcessDiagramGenerator;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;

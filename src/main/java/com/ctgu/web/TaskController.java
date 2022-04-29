@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.ctgu.BO.PageQueryBO;
 import com.ctgu.BO.ResultMsgBO;
 import com.ctgu.PO.RolePO;
+import com.ctgu.service.IProcessService;
 import com.ctgu.service.ITaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,9 @@ public class TaskController {
     @Autowired
     ITaskService iTaskService;
 
+    @Autowired
+    IProcessService iProcessService;
+
     @GetMapping("getTask")
     public ResultMsgBO getTask(RolePO role, PageQueryBO queryBO){
         logger.info("role:{},pageQuery:{}", JSON.toJSONString(role),JSON.toJSONString(queryBO));
@@ -35,6 +39,6 @@ public class TaskController {
 
     @GetMapping("getBackNodes")
     public ResultMsgBO getBackNodes(String processInstanceId){
-        return iTaskService.getBackNodes(processInstanceId);
+        return iProcessService.getBackNodes(processInstanceId);
     }
 }

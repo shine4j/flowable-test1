@@ -10,7 +10,6 @@ import org.flowable.bpmn.model.Process;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
-import org.flowable.engine.runtime.ActivityInstance;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
@@ -63,26 +62,6 @@ public class TaskServiceImpl implements ITaskService {
     }
 
 
-
-    @Override
-    public ResultMsgBO getBackNodes(String processInstanceId) {
-        List<ActivityInstance> userTask = runtimeService.createActivityInstanceQuery()
-                .processInstanceId(processInstanceId)
-                .activityType("userTask")
-                .finished()
-                .list();
-        List<ActivityInstance> list = userTask.stream().filter(taskUtils.distinctByKey(ActivityInstance::getActivityId)).sorted(Comparator.comparing(ActivityInstance::getEndTime)).collect(Collectors.toList());
-        List<Map<String,Object>> nodes = new ArrayList<>();
-       Optional.ofNullable(list).orElse(new ArrayList<>())
-               .forEach(o->{
-                   Map<String,Object> map =  new HashMap<>();
-                   map.put("activityId",o.getActivityId());
-                   map.put("name",o.getActivityName());
-                   nodes.add(map);
-               });
-        return new ResultMsgBO(0,"ok",nodes);
-    }
-
     @Override
     public ResultMsgBO doBack(String taskId, String distFlowElementId) {
         Task task =  taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -113,6 +92,12 @@ public class TaskServiceImpl implements ITaskService {
                 .processVariables(map)
                 .moveExecutionsToSingleActivityId(currentExecutionIds, distFlowElementId)
                 .changeState();
-        return null;
+        return new ResultMsgBO(0,"ok",null);
+    }
+
+    @Override
+    public ResultMsgBO doDelegateTask(String taskId, String userId) {
+        taskService.delegateTask(taskId, userId);
+        return new ResultMsgBO(0,"ok",null);
     }
 }

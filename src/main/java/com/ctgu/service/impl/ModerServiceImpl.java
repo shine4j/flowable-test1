@@ -1,8 +1,12 @@
 package com.ctgu.service.impl;
 
+import com.ctgu.BO.ResultMsgBO;
 import com.ctgu.service.IModerService;
 import com.ctgu.util.FlowProcessDiagramGenerator;
 import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.engine.RepositoryService;
+import org.flowable.engine.repository.Deployment;
+import org.flowable.ui.modeler.domain.AbstractModel;
 import org.flowable.ui.modeler.domain.Model;
 import org.flowable.ui.modeler.serviceapi.ModelService;
 import org.slf4j.Logger;
@@ -12,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * @Author beck_guo
@@ -26,6 +30,8 @@ public class ModerServiceImpl implements IModerService {
     @Autowired
     protected ModelService modelService;
 
+    @Autowired
+    RepositoryService repositoryService;
 
     @Autowired
     private FlowProcessDiagramGenerator flowProcessDiagramGenerator;
@@ -66,5 +72,37 @@ public class ModerServiceImpl implements IModerService {
         } catch (IOException e) {
             logger.error("取流程图xml报错:{}",e);
         }
+    }
+
+    @Override
+    public ResultMsgBO getAllModer() {
+        List<AbstractModel> list = modelService.getModelsByModelType(0);
+        List<Map<String,Object>> moders = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o->{
+                    Map<String,Object> map =  new HashMap<>();
+                    map.put("modelerId",o.getId());
+                    map.put("ModelKey",o.getKey());
+                    map.put("modelerName",o.getName());
+                    moders.add(map);
+                });
+        return new ResultMsgBO(0,"ok",moders);
+    }
+
+    @Override
+    public ResultMsgBO deployModerById(String moderId) {
+        Model model = modelService.getModel(moderId);
+        BpmnModel bpmnModel = modelService.getBpmnModel(model);
+        Deployment deploy = repositoryService.createDeployment()
+                .name(model.getName())
+                .key(model.getKey())
+                .category(model.getDescription())
+                .addBpmnModel(model.getKey() + ".bpmn", bpmnModel)
+                .deploy();
+        Map<String,Object> reModel =  new HashMap<>();
+        reModel.put("modelerId",deploy.getId());
+        reModel.put("ModelKey",deploy.getKey());
+        reModel.put("modelerName",deploy.getName());
+        return new ResultMsgBO(0,"ok",reModel);
     }
 }

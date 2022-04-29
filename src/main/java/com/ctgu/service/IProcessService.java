@@ -1,6 +1,6 @@
 package com.ctgu.service;
 
-import org.springframework.web.bind.annotation.PathVariable;
+import com.ctgu.BO.ResultMsgBO;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -14,4 +14,12 @@ public interface IProcessService {
 
     //得到实例的流程图
     void getImage(String processInstanceId, HttpServletResponse response) throws IOException;
+
+    /**
+     * 得到流程实例的所有回退节点
+     * @param processInstanceId
+     * @return
+     */
+    ResultMsgBO getBackNodes(String processInstanceId);
+
 }
