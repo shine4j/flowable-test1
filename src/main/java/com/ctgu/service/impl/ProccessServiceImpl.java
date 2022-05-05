@@ -6,6 +6,8 @@ import com.ctgu.util.FlowProcessDiagramGenerator;
 import com.ctgu.util.TaskUtils;
 import org.flowable.bpmn.constants.BpmnXMLConstants;
 import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.bpmn.model.EndEvent;
+import org.flowable.bpmn.model.Process;
 import org.flowable.common.engine.impl.util.IoUtil;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RepositoryService;
@@ -13,8 +15,11 @@ import org.flowable.engine.RuntimeService;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.runtime.ActivityInstance;
+import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,6 +32,7 @@ import java.util.stream.Collectors;
  * @create 2022/4/29 15:33
  * @description
  */
+@Service
 public class ProccessServiceImpl implements IProcessService {
 
 
@@ -101,4 +107,41 @@ public class ProccessServiceImpl implements IProcessService {
                 });
         return new ResultMsgBO(0,"ok",nodes);
     }
+
+    @Override
+    public ResultMsgBO doStopProcess(String processInstanceId) {
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+        if (processInstance != null) {
+            List<EndEvent> endNodes = null;
+            BpmnModel bpmnModel = repositoryService.getBpmnModel((processInstance.getProcessDefinitionId()));
+            if (bpmnModel != null) {
+                Process process = bpmnModel.getMainProcess();
+                endNodes = process.findFlowElementsOfType(EndEvent.class);
+            }
+            String endId = endNodes.get(0).getId();
+            //3、执行终止
+            List<Execution> executions = runtimeService.createExecutionQuery().parentId(processInstanceId).list();
+            List<String> executionIds = new ArrayList<>();
+            executions.forEach(execution -> executionIds.add(execution.getId()));
+            runtimeService.createChangeActivityStateBuilder()
+                    .moveExecutionsToSingleActivityId(executionIds, endId)
+                    .changeState();
+        }
+        return new ResultMsgBO(0,"ok",null);
+    }
+
+    @Override
+    public ResultMsgBO getNoFish() {
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().unfinished().list();
+        List<Map<String,Object>> process = new ArrayList<>();
+        list.forEach(s->{
+            Map<String,Object> map =  new HashMap<>();
+            map.put("processDefinitionName",s.getProcessDefinitionName());
+            map.put("porcessId",s.getId());
+            map.put("startUser",s.getStartUserId());
+            process.add(map);
+        });
+       return new ResultMsgBO(0,"ok",process);
+    }
+
 }

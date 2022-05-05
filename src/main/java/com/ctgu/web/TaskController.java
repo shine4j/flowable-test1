@@ -41,4 +41,9 @@ public class TaskController {
     public ResultMsgBO getBackNodes(String processInstanceId){
         return iProcessService.getBackNodes(processInstanceId);
     }
+
+    @GetMapping("doBack")
+    public ResultMsgBO doBack(String taskId,String distFlowElementId){
+        return iTaskService.doBack(taskId,distFlowElementId);
+    }
 }

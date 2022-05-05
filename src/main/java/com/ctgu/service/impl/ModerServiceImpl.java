@@ -12,6 +12,7 @@ import org.flowable.ui.modeler.serviceapi.ModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.*;
  * @create 2022/4/29 15:40
  * @description
  */
+@Service
 public class ModerServiceImpl implements IModerService {
 
     Logger logger = LoggerFactory.getLogger(getClass());

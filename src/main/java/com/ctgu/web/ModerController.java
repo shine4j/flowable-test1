@@ -19,7 +19,7 @@ import java.io.IOException;
  * @description
  */
 @RestController
-@RequestMapping("moder")
+@RequestMapping("api/moder")
 public class ModerController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -37,8 +37,13 @@ public class ModerController {
         iModerService.getXmlById(modeId,resp);
     }
 
-    @GetMapping("getBackNodes")
-    public ResultMsgBO getAll(){
+    @GetMapping("getModerAll")
+    public ResultMsgBO getModerAll(){
         return iModerService.getAllModer();
+    }
+
+    @GetMapping("deploy/{moderId}")
+    public ResultMsgBO deployModerById(@PathVariable String moderId){
+        return iModerService.deployModerById(moderId);
     }
 }
