@@ -1,11 +1,9 @@
 package com.ctgu.web;
 
+import com.ctgu.BO.ResultMsgBO;
 import com.ctgu.service.IProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,19 +14,29 @@ import java.io.IOException;
  * @description
  */
 @RestController
-@RequestMapping("process")
+@RequestMapping("api/process")
 public class ProcessController {
 
     @Autowired
     protected IProcessService iProcessService;
 
-    @GetMapping(value = "/image/{processInstanceId}")
+    @PostMapping(value = "/image/{processInstanceId}")
     public void getImage(@PathVariable String processInstanceId, HttpServletResponse response) throws IOException {
         iProcessService.getImage(processInstanceId,response);
     }
 
     @GetMapping(value = "/stop/{processInstanceId}")
-    public void doStopProcess(@PathVariable String processInstanceId, HttpServletResponse response) {
+    public void doStopProcess(@PathVariable String processInstanceId) {
         iProcessService.doStopProcess(processInstanceId);
+    }
+
+    @GetMapping(value = "getStart")
+    public ResultMsgBO getStart() {
+       return iProcessService.getStart();
+    }
+
+    @GetMapping(value = "start/{key}")
+    public ResultMsgBO startByKey(@PathVariable String key) {
+        return iProcessService.startByKey(key);
     }
 }

@@ -33,4 +33,14 @@ public interface IProcessService {
      */
     ResultMsgBO getNoFish();
 
+    /**
+     * 我提交的实例
+     */
+    ResultMsgBO getStart();
+
+    /**
+     *启动流程
+     */
+    ResultMsgBO startByKey(String key);
+
 }

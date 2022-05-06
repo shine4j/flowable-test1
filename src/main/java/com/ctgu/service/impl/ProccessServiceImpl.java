@@ -10,6 +10,7 @@ import org.flowable.bpmn.model.EndEvent;
 import org.flowable.bpmn.model.Process;
 import org.flowable.common.engine.impl.util.IoUtil;
 import org.flowable.engine.HistoryService;
+import org.flowable.engine.IdentityService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.history.HistoricActivityInstance;
@@ -17,7 +18,6 @@ import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.runtime.ActivityInstance;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
-import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,9 +48,11 @@ public class ProccessServiceImpl implements IProcessService {
     @Autowired
     private TaskUtils taskUtils;
 
-
     @Autowired
     private FlowProcessDiagramGenerator flowProcessDiagramGenerator;
+
+    @Autowired
+    private IdentityService identityService;
 
 
     @Override
@@ -142,6 +144,34 @@ public class ProccessServiceImpl implements IProcessService {
             process.add(map);
         });
        return new ResultMsgBO(0,"ok",process);
+    }
+
+    @Override
+    public ResultMsgBO getStart() {
+        List<HistoricProcessInstance> list = historyService
+                .createHistoricProcessInstanceQuery()
+                .list();
+        List<Map<String,Object>> process = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o->{
+                    Map<String,Object> map =  new HashMap<>();
+                    map.put("processDefinitionName",o.getProcessDefinitionName());
+                    map.put("processId",o.getId());
+                    map.put("startTime",o.getStartTime());
+                    process.add(map);
+                });
+        return new ResultMsgBO(0,"ok",process);
+    }
+
+    @Override
+    public ResultMsgBO startByKey(String key) {
+        identityService.setAuthenticatedUserId("beck_guo");
+        Map<String, Object> varMap = new HashMap<>();
+        varMap.put("initiator", "");
+        varMap.put("skip", true);
+        varMap.put("_FLOWABLE_SKIP_EXPRESSION_ENABLED", true);
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey(key,varMap);
+        return new ResultMsgBO(0,"ok",null);
     }
 
 }

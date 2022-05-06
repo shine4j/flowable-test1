@@ -347,7 +347,6 @@ public class ActiviTest {
                 .singleResult()
                 .getStartUserId();
         logger.info("startUserId:{}",startUserId);
-
     }
 
     public void noFish(){
@@ -391,7 +390,27 @@ public class ActiviTest {
 
     }
 
+    public void getHisComplete(){
+        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
+                .finished()
+                .list();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o->{
+                    logger.info("name:{}",o.getName());
+                    logger.info("assignee:{}",o.getAssignee());
+                    logger.info("createTime:{}",o.getCreateTime());
+                    logger.info("endTime:{}",o.getEndTime());
+                    logger.info("duration:{}",o.getDurationInMillis());
+                });
+    }
 
+    public void myCreateProcess(){
+        List<HistoricProcessInstance> list = historyService
+                .createHistoricProcessInstanceQuery()
+                .startedBy("")
+                .list();
+
+    }
     @Test
     public void test() throws Exception{
         //deploy();
@@ -416,7 +435,8 @@ public class ActiviTest {
         //deploymoderAll();
         //delDeploymoder();
         //getStartUser();
-        lastApplyUser();
-        noFish();
+        //lastApplyUser();
+        //noFish();
+        getHisComplete();
     }
 }

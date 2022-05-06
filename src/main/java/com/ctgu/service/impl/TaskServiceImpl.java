@@ -7,12 +7,14 @@ import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.FlowElement;
 import org.flowable.bpmn.model.FlowNode;
 import org.flowable.bpmn.model.Process;
+import org.flowable.engine.HistoryService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
+import org.flowable.task.api.history.HistoricTaskInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,9 @@ public class TaskServiceImpl implements ITaskService {
     @Autowired
     private TaskUtils taskUtils;
 
+    @Autowired
+    private HistoryService historyService;
+
     @Override
     public ResultMsgBO getTask() {
         List<Task> list = taskService.createTaskQuery().list();
@@ -46,6 +51,7 @@ public class TaskServiceImpl implements ITaskService {
                 .forEach(o->{
                     Map<String,Object> map =  new HashMap<>();
                     map.put("id",o.getId());
+                    map.put("processId",o.getProcessInstanceId());
                     map.put("name",o.getName());
                     map.put("createTime",o.getCreateTime());
                     map.put("formKey",o.getFormKey());
@@ -98,5 +104,24 @@ public class TaskServiceImpl implements ITaskService {
     public ResultMsgBO doDelegateTask(String taskId, String userId) {
         taskService.delegateTask(taskId, userId);
         return new ResultMsgBO(0,"ok",null);
+    }
+
+    @Override
+    public ResultMsgBO getHisTask() {
+        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
+                .finished()
+                .list();
+        List<Map<String,Object>> tasks = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o->{
+                    Map<String,Object> map =  new HashMap<>();
+                    map.put("name",o.getName());
+                    map.put("assignee",o.getAssignee());
+                    map.put("createTime",o.getCreateTime());
+                    map.put("endTime",o.getEndTime());
+                    map.put("duration",o.getDurationInMillis());
+                    tasks.add(map);
+                });
+        return new ResultMsgBO(0,"ok",tasks);
     }
 }

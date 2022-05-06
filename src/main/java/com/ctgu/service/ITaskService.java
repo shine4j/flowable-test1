@@ -11,30 +11,26 @@ public interface ITaskService {
 
     /**
      * 查询所有任务
-     * @return
      */
     ResultMsgBO getTask();
 
     /**
      * 通过任务
-     * @param taskId
-     * @return
      */
     ResultMsgBO doComplete(String taskId);
 
     /**
      * 回退任务
-     * @param taskId
-     * @param distFlowElementId
-     * @return
      */
     ResultMsgBO doBack(String taskId, String distFlowElementId);
 
     /**
      * 委派任务
-     * @param taskId
-     * @param userId
-     * @return
      */
     ResultMsgBO doDelegateTask(String taskId, String userId);
+
+    /**
+     * 已审批任务
+     */
+    ResultMsgBO getHisTask();
 }

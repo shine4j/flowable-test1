@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @description
  */
 @RestController
-@RequestMapping("task")
+@RequestMapping("api/task")
 public class TaskController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -45,5 +45,10 @@ public class TaskController {
     @GetMapping("doBack")
     public ResultMsgBO doBack(String taskId,String distFlowElementId){
         return iTaskService.doBack(taskId,distFlowElementId);
+    }
+
+    @GetMapping("getHisTask")
+    public ResultMsgBO getHisTask(){
+        return iTaskService.getHisTask();
     }
 }
