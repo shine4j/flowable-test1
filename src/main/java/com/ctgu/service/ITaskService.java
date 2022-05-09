@@ -1,6 +1,7 @@
 package com.ctgu.service;
 
 import com.ctgu.BO.ResultMsgBO;
+import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
 
 /**
  * @Author beck_guo
@@ -33,4 +34,9 @@ public interface ITaskService {
      * 已审批任务
      */
     ResultMsgBO getHisTask();
+
+    /**
+     *沟通
+     */
+    ResultMsgBO doCommunicate(String taskId, String assignee);
 }

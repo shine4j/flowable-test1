@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,18 +38,28 @@ public class TaskController {
         return iTaskService.getTask();
     }
 
-    @GetMapping("getBackNodes")
-    public ResultMsgBO getBackNodes(String processInstanceId){
+    @GetMapping("getBackNodes/{processInstanceId}")
+    public ResultMsgBO getBackNodes(@PathVariable String processInstanceId){
         return iProcessService.getBackNodes(processInstanceId);
     }
 
-    @GetMapping("doBack")
-    public ResultMsgBO doBack(String taskId,String distFlowElementId){
+    @GetMapping("doBack/{taskId}/{distFlowElementId}")
+    public ResultMsgBO doBack(@PathVariable String taskId,@PathVariable String distFlowElementId){
         return iTaskService.doBack(taskId,distFlowElementId);
     }
 
     @GetMapping("getHisTask")
     public ResultMsgBO getHisTask(){
         return iTaskService.getHisTask();
+    }
+
+    @GetMapping("doComplete/{taskId}")
+    public ResultMsgBO doComplete(@PathVariable String taskId){
+        return iTaskService.doComplete(taskId);
+    }
+
+    @GetMapping("doCommunicate/{taskId}/{assignee}")
+    public ResultMsgBO doCommunicate(@PathVariable String taskId,@PathVariable String assignee){
+        return iTaskService.doCommunicate(taskId,assignee);
     }
 }

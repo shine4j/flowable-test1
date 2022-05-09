@@ -15,9 +15,12 @@ import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.history.HistoricTaskInstance;
+import org.flowable.task.service.impl.persistence.entity.TaskEntity;
+import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -43,6 +46,8 @@ public class TaskServiceImpl implements ITaskService {
     @Autowired
     private HistoryService historyService;
 
+    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     @Override
     public ResultMsgBO getTask() {
         List<Task> list = taskService.createTaskQuery().list();
@@ -50,10 +55,10 @@ public class TaskServiceImpl implements ITaskService {
         Optional.ofNullable(list).orElse(new ArrayList<>())
                 .forEach(o->{
                     Map<String,Object> map =  new HashMap<>();
-                    map.put("id",o.getId());
+                    map.put("taskId",o.getId());
                     map.put("processId",o.getProcessInstanceId());
                     map.put("name",o.getName());
-                    map.put("createTime",o.getCreateTime());
+                    map.put("createTime",sdf.format(o.getCreateTime()));
                     map.put("formKey",o.getFormKey());
                     tasks.add(map);
                 });
@@ -117,11 +122,33 @@ public class TaskServiceImpl implements ITaskService {
                     Map<String,Object> map =  new HashMap<>();
                     map.put("name",o.getName());
                     map.put("assignee",o.getAssignee());
-                    map.put("createTime",o.getCreateTime());
-                    map.put("endTime",o.getEndTime());
+                    map.put("createTime",sdf.format(o.getCreateTime()));
+                    map.put("endTime",sdf.format(o.getEndTime()));
                     map.put("duration",o.getDurationInMillis());
                     tasks.add(map);
                 });
         return new ResultMsgBO(0,"ok",tasks);
+    }
+
+    @Override
+    public ResultMsgBO doCommunicate(String taskId, String assignee) {
+        TaskEntityImpl task = (TaskEntityImpl)taskService.createTaskQuery().taskId(taskId).singleResult();
+        task.setOwner(task.getAssignee());
+        task.setAssignee(null);
+        task.setCountEnabled(true);
+        taskService.saveTask(task);
+
+        TaskEntity newTask = (TaskEntity) taskService.newTask();
+        newTask.setTenantId(task.getTenantId());
+        newTask.setAssignee(assignee);
+        newTask.setName(task.getName());
+        newTask.setParentTaskId(task.getId());
+        newTask.setProcessDefinitionId(task.getProcessDefinitionId());
+        newTask.setProcessInstanceId(task.getProcessInstanceId());
+        newTask.setTaskDefinitionKey(task.getTaskDefinitionKey());
+        newTask.setTaskDefinitionId(task.getTaskDefinitionId());
+        newTask.setFormKey(task.getFormKey());
+        taskService.saveTask(newTask);
+        return new ResultMsgBO(0,"ok",null);
     }
 }

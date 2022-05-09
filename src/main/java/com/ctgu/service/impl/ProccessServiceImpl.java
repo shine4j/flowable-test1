@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,9 @@ public class ProccessServiceImpl implements IProcessService {
 
     @Autowired
     private IdentityService identityService;
+
+    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
 
     @Override
@@ -157,7 +161,7 @@ public class ProccessServiceImpl implements IProcessService {
                     Map<String,Object> map =  new HashMap<>();
                     map.put("processDefinitionName",o.getProcessDefinitionName());
                     map.put("processId",o.getId());
-                    map.put("startTime",o.getStartTime());
+                    map.put("startTime",sdf.format(o.getStartTime()));
                     process.add(map);
                 });
         return new ResultMsgBO(0,"ok",process);
