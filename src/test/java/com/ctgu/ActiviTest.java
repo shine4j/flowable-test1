@@ -436,7 +436,7 @@ public class ActiviTest {
         //delDeploymoder();
         //getStartUser();
         //lastApplyUser();
-        //noFish();
-        getHisComplete();
+        noFish();
+        //getHisComplete();
     }
 }

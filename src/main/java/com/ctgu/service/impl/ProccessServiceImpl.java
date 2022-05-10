@@ -1,6 +1,9 @@
 package com.ctgu.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.ctgu.BO.ResultMsgBO;
+import com.ctgu.PO.RolePO;
+import com.ctgu.cmd.TaskApplyUserCmd;
 import com.ctgu.service.IProcessService;
 import com.ctgu.util.FlowProcessDiagramGenerator;
 import com.ctgu.util.TaskUtils;
@@ -9,15 +12,14 @@ import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.EndEvent;
 import org.flowable.bpmn.model.Process;
 import org.flowable.common.engine.impl.util.IoUtil;
-import org.flowable.engine.HistoryService;
-import org.flowable.engine.IdentityService;
-import org.flowable.engine.RepositoryService;
-import org.flowable.engine.RuntimeService;
+import org.flowable.engine.*;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.runtime.ActivityInstance;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.task.api.history.HistoricTaskInstance;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +56,9 @@ public class ProccessServiceImpl implements IProcessService {
 
     @Autowired
     private IdentityService identityService;
+
+    @Autowired
+    ManagementService managementService;
 
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -176,6 +181,28 @@ public class ProccessServiceImpl implements IProcessService {
         varMap.put("_FLOWABLE_SKIP_EXPRESSION_ENABLED", true);
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(key,varMap);
         return new ResultMsgBO(0,"ok",null);
+    }
+
+    @Override
+    public ResultMsgBO applyNodes(String processInstanceId) {
+        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .unfinished()
+                .list();
+        List<Map<String, Object>> tasks = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("nodeName", o.getName());
+                    if (StringUtils.isBlank(o.getAssignee())) {
+                        List<RolePO> roles = managementService.executeCommand(new TaskApplyUserCmd(o.getId()));
+                        map.put("assign", JSON.toJSONString(roles));
+                    } else {
+                        map.put("assign", o.getAssignee());
+                    }
+                    tasks.add(map);
+                });
+        return new ResultMsgBO(0, "ok", tasks);
     }
 
 }

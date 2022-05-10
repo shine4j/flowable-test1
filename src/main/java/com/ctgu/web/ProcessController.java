@@ -39,4 +39,9 @@ public class ProcessController {
     public ResultMsgBO startByKey(@PathVariable String key) {
         return iProcessService.startByKey(key);
     }
+
+    @GetMapping(value = "getApplyNodes/{processInstanceId}")
+    public ResultMsgBO getApplyNodes(@PathVariable String processInstanceId) {
+        return iProcessService.applyNodes(processInstanceId);
+    }
 }

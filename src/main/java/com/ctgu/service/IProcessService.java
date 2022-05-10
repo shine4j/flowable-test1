@@ -43,4 +43,9 @@ public interface IProcessService {
      */
     ResultMsgBO startByKey(String key);
 
+    /**
+     *实例的审批记录
+     */
+    ResultMsgBO applyNodes(String processInstanceId);
+
 }
