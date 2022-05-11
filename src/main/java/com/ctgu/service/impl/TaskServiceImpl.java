@@ -1,16 +1,15 @@
 package com.ctgu.service.impl;
 
 import com.ctgu.BO.ResultMsgBO;
+import com.ctgu.BO.TaskHandleBO;
 import com.ctgu.service.ITaskService;
 import com.ctgu.util.TaskUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.FlowElement;
 import org.flowable.bpmn.model.FlowNode;
 import org.flowable.bpmn.model.Process;
-import org.flowable.engine.HistoryService;
-import org.flowable.engine.RepositoryService;
-import org.flowable.engine.RuntimeService;
-import org.flowable.engine.TaskService;
+import org.flowable.engine.*;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
@@ -46,11 +45,15 @@ public class TaskServiceImpl implements ITaskService {
     @Autowired
     private HistoryService historyService;
 
+    @Autowired
+    private ManagementService managementService;
+
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    public ResultMsgBO getTask() {
-        List<Task> list = taskService.createTaskQuery().list();
+    public ResultMsgBO getTask(String username) {
+        List<Task> list = taskService.createTaskQuery()
+                .taskCandidateOrAssigned(username).list();
         List<Map<String,Object>> tasks = new ArrayList<>();
         Optional.ofNullable(list).orElse(new ArrayList<>())
                 .forEach(o->{
@@ -66,8 +69,26 @@ public class TaskServiceImpl implements ITaskService {
     }
 
     @Override
-    public ResultMsgBO doComplete(String taskId) {
-        taskService.complete(taskId);
+    public ResultMsgBO doComplete(TaskHandleBO model) {
+        TaskEntity task = (TaskEntity) taskService.createTaskQuery()
+                .taskId(model.getTaskId())
+                .singleResult();
+        taskService.complete(model.getTaskId());
+        String parentTaskId = task.getParentTaskId();
+        if(StringUtils.isNotEmpty(parentTaskId)){
+            String tableName = managementService.getTableName(TaskEntity.class);
+            String sql="select count(1) from "+tableName+" where parent_task_id_=#{parentTaskId}";
+            long subTaskCount=taskService.createNativeTaskQuery()
+                    .sql(sql).parameter("parentTaskId",parentTaskId).count();
+            if(subTaskCount==0){
+                taskService.resolveTask(parentTaskId);
+            }
+            if("after".equals(task.getScopeType())){
+                Task pTask = taskService.createTaskQuery().taskId(parentTaskId).singleResult();
+                taskService.complete(pTask.getId());
+            }
+        }
+
         return new ResultMsgBO(0,"ok",null);
     }
 
@@ -131,24 +152,29 @@ public class TaskServiceImpl implements ITaskService {
     }
 
     @Override
-    public ResultMsgBO doCommunicate(String taskId, String assignee) {
-        TaskEntityImpl task = (TaskEntityImpl)taskService.createTaskQuery().taskId(taskId).singleResult();
+    public ResultMsgBO doCommunicate(TaskHandleBO model) {
+        TaskEntityImpl task = (TaskEntityImpl)taskService.createTaskQuery()
+                .taskId(model.getTaskId()).singleResult();
         task.setOwner(task.getAssignee());
         task.setAssignee(null);
         task.setCountEnabled(true);
+        task.setScopeType("before");
         taskService.saveTask(task);
-
-        TaskEntity newTask = (TaskEntity) taskService.newTask();
-        newTask.setTenantId(task.getTenantId());
-        newTask.setAssignee(assignee);
-        newTask.setName(task.getName());
-        newTask.setParentTaskId(task.getId());
-        newTask.setProcessDefinitionId(task.getProcessDefinitionId());
-        newTask.setProcessInstanceId(task.getProcessInstanceId());
-        newTask.setTaskDefinitionKey(task.getTaskDefinitionKey());
-        newTask.setTaskDefinitionId(task.getTaskDefinitionId());
-        newTask.setFormKey(task.getFormKey());
-        taskService.saveTask(newTask);
+        Optional.ofNullable(model.getUsers()).orElse(new ArrayList<>())
+                .forEach(o->{
+                    TaskEntity newTask = (TaskEntity) taskService.newTask();
+                    newTask.setTenantId(task.getTenantId());
+                    newTask.setAssignee(o);
+                    newTask.setName(task.getName());
+                    newTask.setParentTaskId(task.getId());
+                    newTask.setProcessDefinitionId(task.getProcessDefinitionId());
+                    newTask.setProcessInstanceId(task.getProcessInstanceId());
+                    newTask.setTaskDefinitionKey(task.getTaskDefinitionKey());
+                    newTask.setTaskDefinitionId(task.getTaskDefinitionId());
+                    newTask.setFormKey(task.getFormKey());
+                    newTask.setCreateTime(new Date());
+                    taskService.saveTask(newTask);
+                });
         return new ResultMsgBO(0,"ok",null);
     }
 }

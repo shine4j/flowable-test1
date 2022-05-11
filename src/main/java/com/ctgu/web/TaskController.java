@@ -3,16 +3,14 @@ package com.ctgu.web;
 import com.alibaba.fastjson.JSON;
 import com.ctgu.BO.PageQueryBO;
 import com.ctgu.BO.ResultMsgBO;
+import com.ctgu.BO.TaskHandleBO;
 import com.ctgu.PO.RolePO;
 import com.ctgu.service.IProcessService;
 import com.ctgu.service.ITaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -32,10 +30,9 @@ public class TaskController {
     @Autowired
     IProcessService iProcessService;
 
-    @GetMapping("getTask")
-    public ResultMsgBO getTask(RolePO role, PageQueryBO queryBO){
-        logger.info("role:{},pageQuery:{}", JSON.toJSONString(role),JSON.toJSONString(queryBO));
-        return iTaskService.getTask();
+    @GetMapping("getTask/{username}")
+    public ResultMsgBO getTask(@PathVariable String username){
+        return iTaskService.getTask(username);
     }
 
     @GetMapping("getBackNodes/{processInstanceId}")
@@ -53,13 +50,13 @@ public class TaskController {
         return iTaskService.getHisTask();
     }
 
-    @GetMapping("doComplete/{taskId}")
-    public ResultMsgBO doComplete(@PathVariable String taskId){
-        return iTaskService.doComplete(taskId);
+    @PostMapping("doComplete")
+    public ResultMsgBO doComplete(@RequestBody TaskHandleBO model){
+        return iTaskService.doComplete(model);
     }
 
-    @GetMapping("doCommunicate/{taskId}/{assignee}")
-    public ResultMsgBO doCommunicate(@PathVariable String taskId,@PathVariable String assignee){
-        return iTaskService.doCommunicate(taskId,assignee);
+    @PostMapping("doCommunicate")
+    public ResultMsgBO doCommunicate(@RequestBody TaskHandleBO model){
+        return iTaskService.doCommunicate(model);
     }
 }
