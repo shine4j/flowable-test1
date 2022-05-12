@@ -141,19 +141,6 @@ public class ProccessServiceImpl implements IProcessService {
         return new ResultMsgBO(0,"ok",null);
     }
 
-    @Override
-    public ResultMsgBO getNoFish() {
-        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().unfinished().list();
-        List<Map<String,Object>> process = new ArrayList<>();
-        list.forEach(s->{
-            Map<String,Object> map =  new HashMap<>();
-            map.put("processDefinitionName",s.getProcessDefinitionName());
-            map.put("porcessId",s.getId());
-            map.put("startUser",s.getStartUserId());
-            process.add(map);
-        });
-       return new ResultMsgBO(0,"ok",process);
-    }
 
     @Override
     public ResultMsgBO getStart() {
@@ -203,6 +190,23 @@ public class ProccessServiceImpl implements IProcessService {
                     tasks.add(map);
                 });
         return new ResultMsgBO(0, "ok", tasks);
+    }
+
+    @Override
+    public ResultMsgBO getNoFish() {
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery()
+                .unfinished()
+                .list();
+        List<Map<String, Object>> process = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o->{
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id",o.getId());
+                    map.put("definitionName", o.getProcessDefinitionName());
+                    map.put("startUserId",o.getStartUserId());
+                    process.add(map);
+                });
+        return new ResultMsgBO(0, "ok", process);
     }
 
 }

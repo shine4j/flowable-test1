@@ -349,7 +349,7 @@ public class ActiviTest {
         logger.info("startUserId:{}",startUserId);
     }
 
-    public void noFish(){
+    public void noFishProcess(){
         List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().unfinished().list();
         list.forEach(s->{
             logger.info("流程名称:{}",s.getProcessDefinitionName());
@@ -436,7 +436,7 @@ public class ActiviTest {
         //delDeploymoder();
         //getStartUser();
         //lastApplyUser();
-        noFish();
+        noFishProcess();
         //getHisComplete();
     }
 }

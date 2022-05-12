@@ -44,4 +44,9 @@ public class ProcessController {
     public ResultMsgBO getApplyNodes(@PathVariable String processInstanceId) {
         return iProcessService.applyNodes(processInstanceId);
     }
+
+    @GetMapping(value = "getNoFish")
+    public ResultMsgBO noFish() {
+        return iProcessService.getNoFish();
+    }
 }
