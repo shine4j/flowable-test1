@@ -60,8 +60,7 @@ public class ProccessServiceImpl implements IProcessService {
     @Autowired
     ManagementService managementService;
 
-    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
     @Override
@@ -108,37 +107,32 @@ public class ProccessServiceImpl implements IProcessService {
                 .finished()
                 .list();
         List<ActivityInstance> list = userTask.stream().filter(taskUtils.distinctByKey(ActivityInstance::getActivityId)).sorted(Comparator.comparing(ActivityInstance::getEndTime)).collect(Collectors.toList());
-        List<Map<String,Object>> nodes = new ArrayList<>();
+        List<Map<String, Object>> nodes = new ArrayList<>();
         Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o->{
-                    Map<String,Object> map =  new HashMap<>();
-                    map.put("activityId",o.getActivityId());
-                    map.put("name",o.getActivityName());
+                .forEach(o -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("activityId", o.getActivityId());
+                    map.put("name", o.getActivityName());
                     nodes.add(map);
                 });
-        return new ResultMsgBO(0,"ok",nodes);
+        return new ResultMsgBO(0, "ok", nodes);
     }
 
     @Override
     public ResultMsgBO doStopProcess(String processInstanceId) {
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-        if (processInstance != null) {
-            List<EndEvent> endNodes = null;
-            BpmnModel bpmnModel = repositoryService.getBpmnModel((processInstance.getProcessDefinitionId()));
-            if (bpmnModel != null) {
-                Process process = bpmnModel.getMainProcess();
-                endNodes = process.findFlowElementsOfType(EndEvent.class);
-            }
-            String endId = endNodes.get(0).getId();
-            //3、执行终止
-            List<Execution> executions = runtimeService.createExecutionQuery().parentId(processInstanceId).list();
-            List<String> executionIds = new ArrayList<>();
-            executions.forEach(execution -> executionIds.add(execution.getId()));
-            runtimeService.createChangeActivityStateBuilder()
-                    .moveExecutionsToSingleActivityId(executionIds, endId)
-                    .changeState();
-        }
-        return new ResultMsgBO(0,"ok",null);
+        BpmnModel bpmnModel = repositoryService.getBpmnModel((processInstance.getProcessDefinitionId()));
+        Process process = bpmnModel.getMainProcess();
+        List<EndEvent> endNodes = process.findFlowElementsOfType(EndEvent.class);
+        String endId = endNodes.get(0).getId();
+        //3、执行终止
+        List<Execution> executions = runtimeService.createExecutionQuery().parentId(processInstanceId).list();
+        List<String> executionIds = new ArrayList<>();
+        executions.forEach(execution -> executionIds.add(execution.getId()));
+        runtimeService.createChangeActivityStateBuilder()
+                .moveExecutionsToSingleActivityId(executionIds, endId)
+                .changeState();
+        return new ResultMsgBO(0, "ok", null);
     }
 
 
@@ -147,16 +141,16 @@ public class ProccessServiceImpl implements IProcessService {
         List<HistoricProcessInstance> list = historyService
                 .createHistoricProcessInstanceQuery()
                 .list();
-        List<Map<String,Object>> process = new ArrayList<>();
+        List<Map<String, Object>> process = new ArrayList<>();
         Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o->{
-                    Map<String,Object> map =  new HashMap<>();
-                    map.put("processDefinitionName",o.getProcessDefinitionName());
-                    map.put("processId",o.getId());
-                    map.put("startTime",sdf.format(o.getStartTime()));
+                .forEach(o -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("processDefinitionName", o.getProcessDefinitionName());
+                    map.put("processId", o.getId());
+                    map.put("startTime", sdf.format(o.getStartTime()));
                     process.add(map);
                 });
-        return new ResultMsgBO(0,"ok",process);
+        return new ResultMsgBO(0, "ok", process);
     }
 
     @Override
@@ -166,8 +160,8 @@ public class ProccessServiceImpl implements IProcessService {
         varMap.put("initiator", "");
         varMap.put("skip", true);
         varMap.put("_FLOWABLE_SKIP_EXPRESSION_ENABLED", true);
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey(key,varMap);
-        return new ResultMsgBO(0,"ok",null);
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey(key, varMap);
+        return new ResultMsgBO(0, "ok", null);
     }
 
     @Override
@@ -199,11 +193,11 @@ public class ProccessServiceImpl implements IProcessService {
                 .list();
         List<Map<String, Object>> process = new ArrayList<>();
         Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o->{
+                .forEach(o -> {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("id",o.getId());
+                    map.put("id", o.getId());
                     map.put("definitionName", o.getProcessDefinitionName());
-                    map.put("startUserId",o.getStartUserId());
+                    map.put("startUserId", o.getStartUserId());
                     process.add(map);
                 });
         return new ResultMsgBO(0, "ok", process);

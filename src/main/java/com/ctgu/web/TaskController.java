@@ -55,8 +55,8 @@ public class TaskController {
         return iTaskService.doComplete(model);
     }
 
-    @PostMapping("doCommunicate")
-    public ResultMsgBO doCommunicate(@RequestBody TaskHandleBO model){
-        return iTaskService.doCommunicate(model);
+    @PostMapping("addSign")
+    public ResultMsgBO addSign(@RequestBody TaskHandleBO model){
+        return iTaskService.addSign(model);
     }
 }

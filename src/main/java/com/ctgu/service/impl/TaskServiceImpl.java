@@ -48,6 +48,8 @@ public class TaskServiceImpl implements ITaskService {
     @Autowired
     private ManagementService managementService;
 
+
+
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
@@ -152,29 +154,10 @@ public class TaskServiceImpl implements ITaskService {
     }
 
     @Override
-    public ResultMsgBO doCommunicate(TaskHandleBO model) {
-        TaskEntityImpl task = (TaskEntityImpl)taskService.createTaskQuery()
-                .taskId(model.getTaskId()).singleResult();
-        task.setOwner(task.getAssignee());
-        task.setAssignee(null);
-        task.setCountEnabled(true);
-        task.setScopeType("before");
-        taskService.saveTask(task);
-        Optional.ofNullable(model.getUsers()).orElse(new ArrayList<>())
-                .forEach(o->{
-                    TaskEntity newTask = (TaskEntity) taskService.newTask();
-                    newTask.setTenantId(task.getTenantId());
-                    newTask.setAssignee(o);
-                    newTask.setName(task.getName());
-                    newTask.setParentTaskId(task.getId());
-                    newTask.setProcessDefinitionId(task.getProcessDefinitionId());
-                    newTask.setProcessInstanceId(task.getProcessInstanceId());
-                    newTask.setTaskDefinitionKey(task.getTaskDefinitionKey());
-                    newTask.setTaskDefinitionId(task.getTaskDefinitionId());
-                    newTask.setFormKey(task.getFormKey());
-                    newTask.setCreateTime(new Date());
-                    taskService.saveTask(newTask);
-                });
+    public ResultMsgBO addSign(TaskHandleBO model) {
+        taskUtils.creatSubTask(model);
         return new ResultMsgBO(0,"ok",null);
     }
+
+
 }

@@ -39,5 +39,7 @@ public interface ITaskService {
     /**
      *沟通
      */
-    ResultMsgBO doCommunicate(TaskHandleBO model);
+    ResultMsgBO addSign(TaskHandleBO model);
+
+
 }

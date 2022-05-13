@@ -26,8 +26,8 @@ public class ProcessController {
     }
 
     @GetMapping(value = "/stop/{processInstanceId}")
-    public void doStopProcess(@PathVariable String processInstanceId) {
-        iProcessService.doStopProcess(processInstanceId);
+    public ResultMsgBO doStopProcess(@PathVariable String processInstanceId) {
+        return iProcessService.doStopProcess(processInstanceId);
     }
 
     @GetMapping(value = "getStart")

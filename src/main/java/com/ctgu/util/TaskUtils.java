@@ -1,18 +1,21 @@
 package com.ctgu.util;
 
+import com.ctgu.BO.ResultMsgBO;
+import com.ctgu.BO.TaskHandleBO;
 import com.ctgu.dao.HisFlowableActinstDao;
 import com.ctgu.dao.RunFlowableActinstDao;
 import org.flowable.engine.ManagementService;
 import org.flowable.engine.RuntimeService;
+import org.flowable.engine.TaskService;
 import org.flowable.engine.impl.persistence.entity.ActivityInstanceEntity;
 import org.flowable.engine.runtime.ActivityInstance;
+import org.flowable.task.service.impl.persistence.entity.TaskEntity;
+import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -36,6 +39,9 @@ public class TaskUtils {
 
     @Autowired
     RuntimeService runtimeService;
+
+    @Autowired
+    TaskService taskService;
 
 
     public  <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
@@ -63,5 +69,30 @@ public class TaskUtils {
                 hisFlowableActinstDao.deleteHisActinstsByIds(runActivityIds);
             }
         }
+    }
+
+    public void creatSubTask(TaskHandleBO model) {
+        TaskEntityImpl task = (TaskEntityImpl)taskService.createTaskQuery()
+                .taskId(model.getTaskId()).singleResult();
+        task.setOwner(task.getAssignee());
+        task.setAssignee(null);
+        task.setCountEnabled(true);
+        task.setScopeType(model.getType());
+        taskService.saveTask(task);
+        Optional.ofNullable(model.getUsers()).orElse(new ArrayList<>())
+                .forEach(o->{
+                    TaskEntity newTask = (TaskEntity) taskService.newTask();
+                    newTask.setTenantId(task.getTenantId());
+                    newTask.setAssignee(o);
+                    newTask.setName(task.getName());
+                    newTask.setParentTaskId(task.getId());
+                    newTask.setProcessDefinitionId(task.getProcessDefinitionId());
+                    newTask.setProcessInstanceId(task.getProcessInstanceId());
+                    newTask.setTaskDefinitionKey(task.getTaskDefinitionKey());
+                    newTask.setTaskDefinitionId(task.getTaskDefinitionId());
+                    newTask.setFormKey(task.getFormKey());
+                    newTask.setCreateTime(new Date());
+                    taskService.saveTask(newTask);
+                });
     }
 }
