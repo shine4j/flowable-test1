@@ -19,4 +19,6 @@ public class TaskHandleBO {
     private String proccessId;
 
     private List<String> users;
+
+    private String assign;
 }

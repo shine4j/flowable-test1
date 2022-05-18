@@ -59,4 +59,9 @@ public class TaskController {
     public ResultMsgBO addSign(@RequestBody TaskHandleBO model){
         return iTaskService.addSign(model);
     }
+
+    @GetMapping("getTaskIng")
+    public ResultMsgBO taskIng(){
+        return iTaskService.taskIng();
+    }
 }

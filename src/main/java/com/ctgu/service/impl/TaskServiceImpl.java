@@ -84,10 +84,10 @@ public class TaskServiceImpl implements ITaskService {
                     .sql(sql).parameter("parentTaskId",parentTaskId).count();
             if(subTaskCount==0){
                 taskService.resolveTask(parentTaskId);
-            }
-            if("after".equals(task.getScopeType())){
                 Task pTask = taskService.createTaskQuery().taskId(parentTaskId).singleResult();
-                taskService.complete(pTask.getId());
+                if("after".equals(pTask.getScopeType())){
+                    taskService.complete(pTask.getId());
+                }
             }
         }
 
@@ -157,6 +157,24 @@ public class TaskServiceImpl implements ITaskService {
     public ResultMsgBO addSign(TaskHandleBO model) {
         taskUtils.creatSubTask(model);
         return new ResultMsgBO(0,"ok",null);
+    }
+
+    @Override
+    public ResultMsgBO taskIng() {
+        List<Task> list = taskService.createTaskQuery()
+                .list();
+        List<Map<String,Object>> tasks = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o->{
+                    Map<String,Object> map =  new HashMap<>();
+                    map.put("taskId",o.getId());
+                    map.put("processId",o.getProcessInstanceId());
+                    map.put("name",o.getName());
+                    map.put("createTime",sdf.format(o.getCreateTime()));
+                    map.put("formKey",o.getFormKey());
+                    tasks.add(map);
+                });
+        return new ResultMsgBO(0,"ok",tasks);
     }
 
 

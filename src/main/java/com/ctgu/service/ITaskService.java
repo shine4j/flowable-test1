@@ -42,4 +42,9 @@ public interface ITaskService {
     ResultMsgBO addSign(TaskHandleBO model);
 
 
+    /**
+     *沟通
+     */
+    ResultMsgBO taskIng();
+
 }

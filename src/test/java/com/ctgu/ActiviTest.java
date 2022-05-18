@@ -32,6 +32,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.CollectionUtils;
 
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -47,6 +48,9 @@ import java.util.stream.Collectors;
 public class ActiviTest {
 
     Logger logger = LoggerFactory.getLogger(getClass());
+
+    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
     @Autowired
     RepositoryService repositoryService;
@@ -411,6 +415,28 @@ public class ActiviTest {
                 .list();
 
     }
+
+    //转办
+    public void taskDelegated(String taskId){
+        taskService.setAssignee(taskId,"003");
+    }
+
+    public void tasking(){
+        List<Task> list = taskService.createTaskQuery()
+                .list();
+        List<Map<String,Object>> tasks = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o->{
+                    Map<String,Object> map =  new HashMap<>();
+                    map.put("taskId",o.getId());
+                    map.put("processId",o.getProcessInstanceId());
+                    map.put("name",o.getName());
+                    map.put("createTime",sdf.format(o.getCreateTime()));
+                    map.put("formKey",o.getFormKey());
+                    tasks.add(map);
+                });
+    }
+
     @Test
     public void test() throws Exception{
         //deploy();
@@ -436,7 +462,8 @@ public class ActiviTest {
         //delDeploymoder();
         //getStartUser();
         //lastApplyUser();
-        noFishProcess();
+        //noFishProcess();
         //getHisComplete();
+        taskDelegated("fa497283-d5bf-11ec-a71b-025041000001");
     }
 }
