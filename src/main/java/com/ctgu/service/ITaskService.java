@@ -28,6 +28,10 @@ public interface ITaskService {
 
     /**
      * 委派任务
+     * A由于某些原因不能处理该任务，可以把任务委派给用户B代理
+     * 当B处理完成之后再次回到用户A这里
+     * 在这个过程中A是任务的所有者
+     * B是该任务的办理人
      */
     ResultMsgBO doDelegateTask(String taskId, String userId);
 
@@ -43,8 +47,14 @@ public interface ITaskService {
 
 
     /**
-     *沟通
+     *正在运行的任务
      */
     ResultMsgBO taskIng();
+
+
+    /**
+     *修改任务处理人
+     */
+    ResultMsgBO setAssignee(TaskHandleBO model);
 
 }

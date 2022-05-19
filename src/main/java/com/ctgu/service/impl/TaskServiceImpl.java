@@ -15,7 +15,6 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.flowable.task.service.impl.persistence.entity.TaskEntity;
-import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -175,6 +174,12 @@ public class TaskServiceImpl implements ITaskService {
                     tasks.add(map);
                 });
         return new ResultMsgBO(0,"ok",tasks);
+    }
+
+    @Override
+    public ResultMsgBO setAssignee(TaskHandleBO model) {
+        taskService.setAssignee(model.getTaskId(),model.getAssign());
+        return new ResultMsgBO(0,"ok",null);
     }
 
 

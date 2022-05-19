@@ -1,10 +1,7 @@
 package com.ctgu.web;
 
-import com.alibaba.fastjson.JSON;
-import com.ctgu.BO.PageQueryBO;
 import com.ctgu.BO.ResultMsgBO;
 import com.ctgu.BO.TaskHandleBO;
-import com.ctgu.PO.RolePO;
 import com.ctgu.service.IProcessService;
 import com.ctgu.service.ITaskService;
 import org.slf4j.Logger;
@@ -63,5 +60,10 @@ public class TaskController {
     @GetMapping("getTaskIng")
     public ResultMsgBO taskIng(){
         return iTaskService.taskIng();
+    }
+
+    @PostMapping("upAssignee")
+    public ResultMsgBO upAssignee(@RequestBody TaskHandleBO model){
+        return iTaskService.setAssignee(model);
     }
 }
