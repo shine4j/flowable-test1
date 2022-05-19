@@ -49,4 +49,9 @@ public class ProcessController {
     public ResultMsgBO noFish() {
         return iProcessService.getNoFish();
     }
+
+    @GetMapping(value = "suspendedOrActivate/{processId}")
+    public ResultMsgBO suspendedOrActivate(@PathVariable String processId) {
+        return iProcessService.suspendedOrActivate(processId);
+    }
 }

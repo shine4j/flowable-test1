@@ -188,8 +188,7 @@ public class ProccessServiceImpl implements IProcessService {
 
     @Override
     public ResultMsgBO getNoFish() {
-        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery()
-                .unfinished()
+        List<ProcessInstance> list = runtimeService.createProcessInstanceQuery()
                 .list();
         List<Map<String, Object>> process = new ArrayList<>();
         Optional.ofNullable(list).orElse(new ArrayList<>())
@@ -198,9 +197,27 @@ public class ProccessServiceImpl implements IProcessService {
                     map.put("id", o.getId());
                     map.put("definitionName", o.getProcessDefinitionName());
                     map.put("startUserId", o.getStartUserId());
+                    map.put("status",o.isSuspended()==false?"activate":"suspended");
                     process.add(map);
                 });
         return new ResultMsgBO(0, "ok", process);
+    }
+
+    @Override
+    public ResultMsgBO suspendedOrActivate(String processInstanceId) {
+
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .singleResult();
+        Map<String, Object> map = new HashMap<>();
+        if(instance.isSuspended()){
+            runtimeService.suspendProcessInstanceById(processInstanceId);
+            map.put("status","suspended");
+        }else{
+            runtimeService.activateProcessInstanceById(processInstanceId);
+            map.put("status","activate");
+        }
+        return new ResultMsgBO(0, "ok", map);
     }
 
 }

@@ -48,4 +48,9 @@ public interface IProcessService {
      */
     ResultMsgBO applyNodes(String processInstanceId);
 
+    /**
+     *挂起或激活实例
+     */
+    ResultMsgBO suspendedOrActivate(String processInstanceId);
+
 }

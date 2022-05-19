@@ -437,6 +437,13 @@ public class ActiviTest {
                 });
     }
 
+    public void status(String processId){
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processId)
+                .singleResult();
+        logger.info("isSuspended:{}",instance.isSuspended());
+    }
+
     @Test
     public void test() throws Exception{
         //deploy();
@@ -464,6 +471,7 @@ public class ActiviTest {
         //lastApplyUser();
         //noFishProcess();
         //getHisComplete();
-        taskDelegated("fa497283-d5bf-11ec-a71b-025041000001");
+        //taskDelegated("fa497283-d5bf-11ec-a71b-025041000001");
+        status("871b2ac9-d751-11ec-9849-025041000001");
     }
 }
