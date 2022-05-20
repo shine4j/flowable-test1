@@ -444,6 +444,24 @@ public class ActiviTest {
         logger.info("isSuspended:{}",instance.isSuspended());
     }
 
+    public void nodes(){
+        String  processId="871b2ac9-d751-11ec-9849-025041000001";
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processId).singleResult();
+        BpmnModel model = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
+        List<Process> processes = model.getProcesses();
+        processes.forEach(o->{
+            Collection<FlowElement> flowElements = o.getFlowElements();
+            flowElements.forEach(k->{
+                if(k instanceof UserTask){
+                    logger.info("ExtensionId:{}",k.getId());
+                    logger.info("taskName:{}",k.getName());
+                    logger.info("col:{}",k.getXmlColumnNumber());
+                    logger.info("row:{}",k.getXmlRowNumber());
+                }
+            });
+        });
+    }
+
     @Test
     public void test() throws Exception{
         //deploy();
@@ -472,6 +490,9 @@ public class ActiviTest {
         //noFishProcess();
         //getHisComplete();
         //taskDelegated("fa497283-d5bf-11ec-a71b-025041000001");
-        status("871b2ac9-d751-11ec-9849-025041000001");
+        //status("871b2ac9-d751-11ec-9849-025041000001");
+        nodes();
     }
+
+
 }

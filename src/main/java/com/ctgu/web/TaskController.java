@@ -66,4 +66,9 @@ public class TaskController {
     public ResultMsgBO upAssignee(@RequestBody TaskHandleBO model){
         return iTaskService.setAssignee(model);
     }
+
+    @GetMapping("getTaskAllNode/{processId}")
+    public ResultMsgBO getTaskAllNode(@PathVariable String processId){
+        return iTaskService.getTaskAllNode(processId);
+    }
 }

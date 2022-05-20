@@ -5,9 +5,7 @@ import com.ctgu.BO.TaskHandleBO;
 import com.ctgu.service.ITaskService;
 import com.ctgu.util.TaskUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.flowable.bpmn.model.BpmnModel;
-import org.flowable.bpmn.model.FlowElement;
-import org.flowable.bpmn.model.FlowNode;
+import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
 import org.flowable.engine.*;
 import org.flowable.engine.runtime.Execution;
@@ -180,6 +178,26 @@ public class TaskServiceImpl implements ITaskService {
     public ResultMsgBO setAssignee(TaskHandleBO model) {
         taskService.setAssignee(model.getTaskId(),model.getAssign());
         return new ResultMsgBO(0,"ok",null);
+    }
+
+    @Override
+    public ResultMsgBO getTaskAllNode(String processId) {
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processId).singleResult();
+        BpmnModel bpmn = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
+        List<Process> processes = bpmn.getProcesses();
+        List<Map<String,Object>> tasks = new ArrayList<>();
+        processes.forEach(o->{
+            Collection<FlowElement> flowElements = o.getFlowElements();
+            flowElements.forEach(k->{
+                if(k instanceof UserTask){
+                    Map<String,Object> map =  new HashMap<>();
+                    map.put("id",k.getId());
+                    map.put("taskName",k.getName());
+                    tasks.add(map);
+                }
+            });
+        });
+        return new ResultMsgBO(0,"ok",tasks);
     }
 
 
