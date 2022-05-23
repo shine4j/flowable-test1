@@ -1,6 +1,6 @@
 package com.ctgu.cmd;
 
-import com.ctgu.PO.RolePO;
+import com.ctgu.model.PO.RolePO;
 import org.flowable.common.engine.impl.interceptor.Command;
 import org.flowable.common.engine.impl.interceptor.CommandContext;
 import org.flowable.engine.impl.util.CommandContextUtil;

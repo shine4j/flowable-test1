@@ -1,6 +1,6 @@
 package com.ctgu.service;
 
-import com.ctgu.BO.ResultMsgBO;
+import com.ctgu.model.BO.ResultMsgBO;
 
 /**
  * @Author beck_guo

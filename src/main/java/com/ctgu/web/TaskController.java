@@ -1,7 +1,7 @@
 package com.ctgu.web;
 
-import com.ctgu.BO.ResultMsgBO;
-import com.ctgu.BO.TaskHandleBO;
+import com.ctgu.model.BO.ResultMsgBO;
+import com.ctgu.model.BO.TaskHandleBO;
 import com.ctgu.service.IProcessService;
 import com.ctgu.service.ITaskService;
 import org.slf4j.Logger;

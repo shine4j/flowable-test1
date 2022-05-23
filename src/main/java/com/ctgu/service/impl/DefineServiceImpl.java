@@ -1,6 +1,6 @@
 package com.ctgu.service.impl;
 
-import com.ctgu.BO.ResultMsgBO;
+import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.service.IDefineService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.Deployment;

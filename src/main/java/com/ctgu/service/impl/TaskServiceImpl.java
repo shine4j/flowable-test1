@@ -1,7 +1,7 @@
 package com.ctgu.service.impl;
 
-import com.ctgu.BO.ResultMsgBO;
-import com.ctgu.BO.TaskHandleBO;
+import com.ctgu.model.BO.ResultMsgBO;
+import com.ctgu.model.BO.TaskHandleBO;
 import com.ctgu.service.ITaskService;
 import com.ctgu.util.TaskUtils;
 import org.apache.commons.lang3.StringUtils;

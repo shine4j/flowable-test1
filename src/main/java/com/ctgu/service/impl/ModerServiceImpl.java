@@ -1,6 +1,6 @@
 package com.ctgu.service.impl;
 
-import com.ctgu.BO.ResultMsgBO;
+import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.service.IModerService;
 import com.ctgu.util.FlowProcessDiagramGenerator;
 import org.flowable.bpmn.model.BpmnModel;

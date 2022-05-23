@@ -1,4 +1,4 @@
-package com.ctgu.PO;
+package com.ctgu.model.PO;
 
 /**
  * @Author beck_guo

@@ -1,8 +1,8 @@
 package com.ctgu.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.ctgu.BO.ResultMsgBO;
-import com.ctgu.PO.RolePO;
+import com.ctgu.model.BO.ResultMsgBO;
+import com.ctgu.model.PO.RolePO;
 import com.ctgu.cmd.TaskApplyUserCmd;
 import com.ctgu.service.IProcessService;
 import com.ctgu.util.FlowProcessDiagramGenerator;

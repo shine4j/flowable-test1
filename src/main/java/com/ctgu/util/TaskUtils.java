@@ -1,7 +1,6 @@
 package com.ctgu.util;
 
-import com.ctgu.BO.ResultMsgBO;
-import com.ctgu.BO.TaskHandleBO;
+import com.ctgu.model.BO.TaskHandleBO;
 import com.ctgu.dao.HisFlowableActinstDao;
 import com.ctgu.dao.RunFlowableActinstDao;
 import org.flowable.engine.ManagementService;

@@ -1,6 +1,6 @@
 package com.ctgu.service;
 
-import com.ctgu.BO.ResultMsgBO;
+import com.ctgu.model.BO.ResultMsgBO;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

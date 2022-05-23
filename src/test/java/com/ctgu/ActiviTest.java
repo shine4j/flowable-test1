@@ -2,7 +2,7 @@ package com.ctgu;
 
 
 import com.alibaba.fastjson.JSON;
-import com.ctgu.PO.RolePO;
+import com.ctgu.model.PO.RolePO;
 import com.ctgu.cmd.TaskApplyUserCmd;
 import com.ctgu.dao.HisFlowableActinstDao;
 import com.ctgu.dao.RunFlowableActinstDao;

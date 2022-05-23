@@ -1,8 +1,7 @@
 package com.ctgu.service;
 
-import com.ctgu.BO.ResultMsgBO;
-import com.ctgu.BO.TaskHandleBO;
-import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
+import com.ctgu.model.BO.ResultMsgBO;
+import com.ctgu.model.BO.TaskHandleBO;
 
 /**
  * @Author beck_guo

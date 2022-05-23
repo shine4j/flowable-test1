@@ -1,6 +1,6 @@
 package com.ctgu.web;
 
-import com.ctgu.BO.ResultMsgBO;
+import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.service.IDefineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

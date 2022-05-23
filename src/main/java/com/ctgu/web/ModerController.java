@@ -1,6 +1,6 @@
 package com.ctgu.web;
 
-import com.ctgu.BO.ResultMsgBO;
+import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.service.IModerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

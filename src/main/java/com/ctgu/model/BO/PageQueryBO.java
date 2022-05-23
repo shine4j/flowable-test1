@@ -1,4 +1,4 @@
-package com.ctgu.BO;
+package com.ctgu.model.BO;
 
 import lombok.Data;
 
