@@ -71,4 +71,9 @@ public class TaskController {
     public ResultMsgBO getTaskAllNode(@PathVariable String processId){
         return iTaskService.getTaskAllNode(processId);
     }
+
+    @GetMapping("toActNode/{taskId}/{actId}")
+    public ResultMsgBO toActNode(@PathVariable String taskId,@PathVariable String actId){
+        return iTaskService.doBack(taskId,actId);
+    }
 }

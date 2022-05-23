@@ -58,8 +58,10 @@ public interface ITaskService {
     ResultMsgBO setAssignee(TaskHandleBO model);
 
     /**
-     *修改任务处理人
+     *得到任务所有节点
      */
     ResultMsgBO getTaskAllNode(String processId);
+
+
 
 }
