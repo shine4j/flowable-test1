@@ -11,12 +11,10 @@ public enum TaskHandleEnum {
     ADDSIGN("taskAddSign"),
     TRANSFER("taskTransferOrDelegate"),
     DELEGATE("taskTransferOrDelegate"),
-    CHANGEASSIGN("a"),
+    CHANGEASSIGN("taskChangeAssign"),
     ANYNODE("taskAnyNode"),
-    HANG("a"),
-    ACTIVATION("a"),
-    STOP("a");
-
+    HANGORACTIVATION("taskHangOrActivation"),
+    STOP("taskStop");
 
     private String serviceName;
 
@@ -28,14 +26,6 @@ public enum TaskHandleEnum {
         return this.serviceName;
     }
 
-    public static TaskHandleEnum getTypeByServiceName(String serviceName){
-        for(TaskHandleEnum type: TaskHandleEnum.values()){
-            if(type.getServiceName().equals(serviceName)){
-                return type;
-            }
-        }
-        return null;
-    }
 
     public static String getServiceByType(String typeName){
         for(TaskHandleEnum type: TaskHandleEnum.values()){

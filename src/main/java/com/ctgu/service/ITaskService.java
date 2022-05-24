@@ -16,34 +16,9 @@ public interface ITaskService {
     ResultMsgBO getTask(String username);
 
     /**
-     * 通过任务
-     */
-    ResultMsgBO doComplete(TaskHandleBO model);
-
-    /**
-     * 回退任务
-     */
-    ResultMsgBO doBack(String taskId, String distFlowElementId);
-
-    /**
-     * 委派任务
-     * A由于某些原因不能处理该任务，可以把任务委派给用户B代理
-     * 当B处理完成之后再次回到用户A这里
-     * 在这个过程中A是任务的所有者
-     * B是该任务的办理人
-     */
-    ResultMsgBO doDelegateTask(String taskId, String userId);
-
-    /**
      * 已审批任务
      */
     ResultMsgBO getHisTask();
-
-    /**
-     *沟通
-     */
-    ResultMsgBO addSign(TaskHandleBO model);
-
 
     /**
      *正在运行的任务
@@ -52,21 +27,9 @@ public interface ITaskService {
 
 
     /**
-     *修改任务处理人
-     */
-    ResultMsgBO setAssignee(TaskHandleBO model);
-
-    /**
      *得到任务所有节点
      */
     ResultMsgBO getTaskAllNode(String processId);
-
-
-    /**
-     *得到任务所有节点
-     */
-    ResultMsgBO doHandle(TaskHandleBO model);
-
 
 
 }

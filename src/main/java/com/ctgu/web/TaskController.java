@@ -7,8 +7,6 @@ import com.ctgu.service.IProcessService;
 import com.ctgu.service.ITaskService;
 import com.ctgu.service.TaskBaseHandle;
 import com.ctgu.util.ApplicationContextUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/task")
 public class TaskController {
-
-    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     ITaskService iTaskService;
@@ -40,45 +36,23 @@ public class TaskController {
         return iProcessService.getBackNodes(processInstanceId);
     }
 
-    @GetMapping("doBack/{taskId}/{distFlowElementId}")
-    public ResultMsgBO doBack(@PathVariable String taskId,@PathVariable String distFlowElementId){
-        return iTaskService.doBack(taskId,distFlowElementId);
-    }
-
     @GetMapping("getHisTask")
     public ResultMsgBO getHisTask(){
         return iTaskService.getHisTask();
     }
 
-    @PostMapping("doComplete")
-    public ResultMsgBO doComplete(@RequestBody TaskHandleBO model){
-        return iTaskService.doComplete(model);
-    }
-
-    @PostMapping("addSign")
-    public ResultMsgBO addSign(@RequestBody TaskHandleBO model){
-        return iTaskService.addSign(model);
-    }
 
     @GetMapping("getTaskIng")
     public ResultMsgBO taskIng(){
         return iTaskService.taskIng();
     }
 
-    @PostMapping("upAssignee")
-    public ResultMsgBO upAssignee(@RequestBody TaskHandleBO model){
-        return iTaskService.setAssignee(model);
-    }
 
     @GetMapping("getTaskAllNode/{processId}")
     public ResultMsgBO getTaskAllNode(@PathVariable String processId){
         return iTaskService.getTaskAllNode(processId);
     }
 
-    @GetMapping("toActNode/{taskId}/{actId}")
-    public ResultMsgBO toActNode(@PathVariable String taskId,@PathVariable String actId){
-        return iTaskService.doBack(taskId,actId);
-    }
 
     @PostMapping("handle")
     public ResultMsgBO handle(@RequestBody TaskHandleBO model){

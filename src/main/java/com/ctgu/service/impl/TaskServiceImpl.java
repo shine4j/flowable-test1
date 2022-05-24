@@ -38,15 +38,7 @@ public class TaskServiceImpl implements ITaskService {
     RepositoryService repositoryService;
 
     @Autowired
-    private TaskUtils taskUtils;
-
-    @Autowired
     private HistoryService historyService;
-
-    @Autowired
-    private ManagementService managementService;
-
-
 
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -68,68 +60,6 @@ public class TaskServiceImpl implements ITaskService {
         return new ResultMsgBO(0,"ok",tasks);
     }
 
-    @Override
-    public ResultMsgBO doComplete(TaskHandleBO model) {
-        TaskEntity task = (TaskEntity) taskService.createTaskQuery()
-                .taskId(model.getTaskId())
-                .singleResult();
-        taskService.complete(model.getTaskId());
-        String parentTaskId = task.getParentTaskId();
-        if(StringUtils.isNotEmpty(parentTaskId)){
-            String tableName = managementService.getTableName(TaskEntity.class);
-            String sql="select count(1) from "+tableName+" where parent_task_id_=#{parentTaskId}";
-            long subTaskCount=taskService.createNativeTaskQuery()
-                    .sql(sql).parameter("parentTaskId",parentTaskId).count();
-            if(subTaskCount==0){
-                taskService.resolveTask(parentTaskId);
-                Task pTask = taskService.createTaskQuery().taskId(parentTaskId).singleResult();
-                if("after".equals(pTask.getScopeType())){
-                    taskService.complete(pTask.getId());
-                }
-            }
-        }
-        return new ResultMsgBO(0,"ok",null);
-    }
-
-
-    @Override
-    public ResultMsgBO doBack(String taskId, String distFlowElementId) {
-        Task task =  taskService.createTaskQuery().taskId(taskId).singleResult();
-        BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());
-        List<Process> processes = bpmnModel.getProcesses();
-        FlowNode distActivity = null;
-        for (Process process : processes) {
-            FlowElement flowElement = process.getFlowElementMap().get(distFlowElementId);
-            if (flowElement != null) {
-                distActivity = (FlowNode) flowElement;
-                break;
-            }
-        }
-        Map<String, Object> map = new HashMap();
-        if (distActivity != null) {
-            if ("提交人".equals(distActivity.getName())) {
-                ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
-                map.put("initiator", processInstance.getStartUserId());
-            }
-        }
-        List<String> currentExecutionIds = new ArrayList<>();
-        List<Execution> executions = runtimeService.createExecutionQuery().parentId(task.getProcessInstanceId()).list();
-        for (Execution execution : executions) {
-            currentExecutionIds.add(execution.getId());
-        }
-        taskUtils.deleteActivity(distFlowElementId,task.getProcessInstanceId());
-        runtimeService.createChangeActivityStateBuilder()
-                .processVariables(map)
-                .moveExecutionsToSingleActivityId(currentExecutionIds, distFlowElementId)
-                .changeState();
-        return new ResultMsgBO(0,"ok",null);
-    }
-
-    @Override
-    public ResultMsgBO doDelegateTask(String taskId, String userId) {
-        taskService.delegateTask(taskId, userId);
-        return new ResultMsgBO(0,"ok",null);
-    }
 
     @Override
     public ResultMsgBO getHisTask() {
@@ -151,12 +81,6 @@ public class TaskServiceImpl implements ITaskService {
     }
 
     @Override
-    public ResultMsgBO addSign(TaskHandleBO model) {
-        taskUtils.creatSubTask(model);
-        return new ResultMsgBO(0,"ok",null);
-    }
-
-    @Override
     public ResultMsgBO taskIng() {
         List<Task> list = taskService.createTaskQuery()
                 .list();
@@ -174,11 +98,6 @@ public class TaskServiceImpl implements ITaskService {
         return new ResultMsgBO(0,"ok",tasks);
     }
 
-    @Override
-    public ResultMsgBO setAssignee(TaskHandleBO model) {
-        taskService.setAssignee(model.getTaskId(),model.getAssign());
-        return new ResultMsgBO(0,"ok",null);
-    }
 
     @Override
     public ResultMsgBO getTaskAllNode(String processId) {
@@ -199,12 +118,5 @@ public class TaskServiceImpl implements ITaskService {
         });
         return new ResultMsgBO(0,"ok",tasks);
     }
-
-    @Override
-    public ResultMsgBO doHandle(TaskHandleBO model) {
-        //TaskHandleEnum.
-        return null;
-    }
-
 
 }
