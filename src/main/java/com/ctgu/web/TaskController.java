@@ -2,8 +2,11 @@ package com.ctgu.web;
 
 import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.model.BO.TaskHandleBO;
+import com.ctgu.model.types.TaskHandleEnum;
 import com.ctgu.service.IProcessService;
 import com.ctgu.service.ITaskService;
+import com.ctgu.service.TaskBaseHandle;
+import com.ctgu.util.ApplicationContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +78,13 @@ public class TaskController {
     @GetMapping("toActNode/{taskId}/{actId}")
     public ResultMsgBO toActNode(@PathVariable String taskId,@PathVariable String actId){
         return iTaskService.doBack(taskId,actId);
+    }
+
+    @PostMapping("handle")
+    public ResultMsgBO handle(@RequestBody TaskHandleBO model){
+        String type = TaskHandleEnum.getServiceByType(model.getType());
+        TaskBaseHandle baseHandle=ApplicationContextUtils.popBean(type);
+        baseHandle.execute(model);
+        return new ResultMsgBO(0,"ok",null);
     }
 }

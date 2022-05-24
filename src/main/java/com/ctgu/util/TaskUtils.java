@@ -76,7 +76,7 @@ public class TaskUtils {
         task.setOwner(task.getAssignee());
         task.setAssignee(null);
         task.setCountEnabled(true);
-        task.setScopeType(model.getType());
+        task.setScopeType(model.getAddSignType());
         taskService.saveTask(task);
         Optional.ofNullable(model.getUsers()).orElse(new ArrayList<>())
                 .forEach(o->{

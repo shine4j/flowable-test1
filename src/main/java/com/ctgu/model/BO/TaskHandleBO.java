@@ -21,4 +21,8 @@ public class TaskHandleBO {
     private List<String> users;
 
     private String assign;
+
+    private String actId;
+
+    private String addSignType;
 }

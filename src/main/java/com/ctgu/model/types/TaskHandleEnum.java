@@ -7,13 +7,12 @@ package com.ctgu.model.types;
  */
 public enum TaskHandleEnum {
 
-    COMPLETE("a"),
-    BACK("b"),
-    COMMUNICATE("a"),
-    TRANSFER("a"),
-    DELEGATE("a"),
+    COMPLETE("taskComplete"),
+    ADDSIGN("taskAddSign"),
+    TRANSFER("taskTransferOrDelegate"),
+    DELEGATE("taskTransferOrDelegate"),
     CHANGEASSIGN("a"),
-    ANYNODE("a"),
+    ANYNODE("taskAnyNode"),
     HANG("a"),
     ACTIVATION("a"),
     STOP("a");

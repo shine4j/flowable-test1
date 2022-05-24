@@ -13,5 +13,5 @@ public abstract class TaskBaseHandle {
         handle(model);
     }
 
-    abstract void handle(TaskHandleBO model);
+    public abstract void handle(TaskHandleBO model);
 }
