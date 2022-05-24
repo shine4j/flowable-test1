@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 @Service
 public class ProccessServiceImpl implements IProcessService {
 
-
     @Autowired
     protected RuntimeService runtimeService;
 
@@ -61,7 +60,6 @@ public class ProccessServiceImpl implements IProcessService {
     ManagementService managementService;
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
 
     @Override
     public void getImage(String processInstanceId, HttpServletResponse response) throws IOException {
@@ -116,23 +114,6 @@ public class ProccessServiceImpl implements IProcessService {
                     nodes.add(map);
                 });
         return new ResultMsgBO(0, "ok", nodes);
-    }
-
-    @Override
-    public ResultMsgBO doStopProcess(String processInstanceId) {
-        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-        BpmnModel bpmnModel = repositoryService.getBpmnModel((processInstance.getProcessDefinitionId()));
-        Process process = bpmnModel.getMainProcess();
-        List<EndEvent> endNodes = process.findFlowElementsOfType(EndEvent.class);
-        String endId = endNodes.get(0).getId();
-        //3、执行终止
-        List<Execution> executions = runtimeService.createExecutionQuery().parentId(processInstanceId).list();
-        List<String> executionIds = new ArrayList<>();
-        executions.forEach(execution -> executionIds.add(execution.getId()));
-        runtimeService.createChangeActivityStateBuilder()
-                .moveExecutionsToSingleActivityId(executionIds, endId)
-                .changeState();
-        return new ResultMsgBO(0, "ok", null);
     }
 
 
@@ -203,21 +184,5 @@ public class ProccessServiceImpl implements IProcessService {
         return new ResultMsgBO(0, "ok", process);
     }
 
-    @Override
-    public ResultMsgBO suspendedOrActivate(String processInstanceId) {
-
-        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
-                .processInstanceId(processInstanceId)
-                .singleResult();
-        Map<String, Object> map = new HashMap<>();
-        if(instance.isSuspended()){
-            runtimeService.suspendProcessInstanceById(processInstanceId);
-            map.put("status","suspended");
-        }else{
-            runtimeService.activateProcessInstanceById(processInstanceId);
-            map.put("status","activate");
-        }
-        return new ResultMsgBO(0, "ok", map);
-    }
 
 }

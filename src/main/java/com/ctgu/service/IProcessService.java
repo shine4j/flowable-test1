@@ -22,11 +22,6 @@ public interface IProcessService {
      */
     ResultMsgBO getBackNodes(String processInstanceId);
 
-    /**
-     * 终止流程实例
-     */
-    ResultMsgBO doStopProcess(String processInstanceId);
-
 
     /**
      *未完成实例
@@ -48,9 +43,5 @@ public interface IProcessService {
      */
     ResultMsgBO applyNodes(String processInstanceId);
 
-    /**
-     *挂起或激活实例
-     */
-    ResultMsgBO suspendedOrActivate(String processInstanceId);
 
 }
