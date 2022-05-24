@@ -2,6 +2,7 @@ package com.ctgu.service.impl;
 
 import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.model.BO.TaskHandleBO;
+import com.ctgu.model.types.TaskHandleEnum;
 import com.ctgu.service.ITaskService;
 import com.ctgu.util.TaskUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -87,7 +88,6 @@ public class TaskServiceImpl implements ITaskService {
                 }
             }
         }
-
         return new ResultMsgBO(0,"ok",null);
     }
 
@@ -198,6 +198,12 @@ public class TaskServiceImpl implements ITaskService {
             });
         });
         return new ResultMsgBO(0,"ok",tasks);
+    }
+
+    @Override
+    public ResultMsgBO doHandle(TaskHandleBO model) {
+        //TaskHandleEnum.
+        return null;
     }
 
 

@@ -62,5 +62,11 @@ public interface ITaskService {
     ResultMsgBO getTaskAllNode(String processId);
 
 
+    /**
+     *得到任务所有节点
+     */
+    ResultMsgBO doHandle(TaskHandleBO model);
+
+
 
 }
