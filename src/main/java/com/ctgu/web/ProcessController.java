@@ -25,10 +25,6 @@ public class ProcessController {
         iProcessService.getImage(processInstanceId,response);
     }
 
-    @GetMapping(value = "/stop/{processInstanceId}")
-    public ResultMsgBO doStopProcess(@PathVariable String processInstanceId) {
-        return iProcessService.doStopProcess(processInstanceId);
-    }
 
     @GetMapping(value = "getStart")
     public ResultMsgBO getStart() {
@@ -50,8 +46,4 @@ public class ProcessController {
         return iProcessService.getNoFish();
     }
 
-    @GetMapping(value = "suspendedOrActivate/{processId}")
-    public ResultMsgBO suspendedOrActivate(@PathVariable String processId) {
-        return iProcessService.suspendedOrActivate(processId);
-    }
 }
