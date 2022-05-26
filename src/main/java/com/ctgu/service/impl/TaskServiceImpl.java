@@ -71,6 +71,8 @@ public class TaskServiceImpl implements ITaskService {
                 .forEach(o->{
                     Map<String,Object> map =  new HashMap<>();
                     map.put("name",o.getName());
+                    map.put("taskId",o.getId());
+                    map.put("processId",o.getProcessInstanceId());
                     map.put("assignee",o.getAssignee());
                     map.put("createTime",sdf.format(o.getCreateTime()));
                     map.put("endTime",sdf.format(o.getEndTime()));
