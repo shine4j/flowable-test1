@@ -11,9 +11,9 @@ import com.ctgu.model.BO.TaskHandleBO;
 public interface ITaskService {
 
     /**
-     * 查询所有任务
+     * 查询我的任务
      */
-    ResultMsgBO getTask(String username);
+    ResultMsgBO getMyTask(String username);
 
     /**
      * 已审批任务

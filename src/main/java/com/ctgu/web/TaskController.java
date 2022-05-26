@@ -26,9 +26,9 @@ public class TaskController {
     @Autowired
     IProcessService iProcessService;
 
-    @GetMapping("getTask/{username}")
-    public ResultMsgBO getTask(@PathVariable String username){
-        return iTaskService.getTask(username);
+    @GetMapping("getMyTask/{username}")
+    public ResultMsgBO getMyTask(@PathVariable String username){
+        return iTaskService.getMyTask(username);
     }
 
     @GetMapping("getBackNodes/{processInstanceId}")

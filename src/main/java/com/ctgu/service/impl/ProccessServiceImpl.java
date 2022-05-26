@@ -118,9 +118,10 @@ public class ProccessServiceImpl implements IProcessService {
 
 
     @Override
-    public ResultMsgBO getStart() {
+    public ResultMsgBO getStart(String username) {
         List<HistoricProcessInstance> list = historyService
                 .createHistoricProcessInstanceQuery()
+                .startedBy(username)
                 .list();
         List<Map<String, Object>> process = new ArrayList<>();
         Optional.ofNullable(list).orElse(new ArrayList<>())

@@ -43,7 +43,7 @@ public class TaskServiceImpl implements ITaskService {
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    public ResultMsgBO getTask(String username) {
+    public ResultMsgBO getMyTask(String username) {
         List<Task> list = taskService.createTaskQuery()
                 .taskCandidateOrAssigned(username).list();
         List<Map<String,Object>> tasks = new ArrayList<>();
