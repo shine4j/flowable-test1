@@ -17,10 +17,6 @@ public interface IProcessService {
      */
     void getImage(String processInstanceId, HttpServletResponse response) throws IOException;
 
-    /**
-     * 得到流程实例的所有回退节点
-     */
-    ResultMsgBO getBackNodes(String processInstanceId);
 
 
     /**

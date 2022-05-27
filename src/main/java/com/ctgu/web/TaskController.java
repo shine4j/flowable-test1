@@ -33,7 +33,7 @@ public class TaskController {
 
     @GetMapping("getBackNodes/{processInstanceId}")
     public ResultMsgBO getBackNodes(@PathVariable String processInstanceId){
-        return iProcessService.getBackNodes(processInstanceId);
+        return iTaskService.getBackNodes(processInstanceId);
     }
 
     @GetMapping("getHisTask/{username}")

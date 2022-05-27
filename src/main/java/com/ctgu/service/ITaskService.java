@@ -45,4 +45,10 @@ public interface ITaskService {
     ResultMsgBO getTaskAllNode(String processId);
 
 
+    /**
+     * 得到流程实例的所有回退节点
+     */
+    ResultMsgBO getBackNodes(String processInstanceId);
+
+
 }

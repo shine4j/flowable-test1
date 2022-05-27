@@ -6,17 +6,12 @@ import com.ctgu.model.PO.RolePO;
 import com.ctgu.cmd.TaskApplyUserCmd;
 import com.ctgu.service.IProcessService;
 import com.ctgu.util.FlowProcessDiagramGenerator;
-import com.ctgu.util.TaskUtils;
 import org.flowable.bpmn.constants.BpmnXMLConstants;
 import org.flowable.bpmn.model.BpmnModel;
-import org.flowable.bpmn.model.EndEvent;
-import org.flowable.bpmn.model.Process;
 import org.flowable.common.engine.impl.util.IoUtil;
 import org.flowable.engine.*;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricProcessInstance;
-import org.flowable.engine.runtime.ActivityInstance;
-import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.junit.platform.commons.util.StringUtils;
@@ -28,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @Author beck_guo
@@ -46,9 +40,6 @@ public class ProccessServiceImpl implements IProcessService {
 
     @Autowired
     protected RepositoryService repositoryService;
-
-    @Autowired
-    private TaskUtils taskUtils;
 
     @Autowired
     private FlowProcessDiagramGenerator flowProcessDiagramGenerator;
@@ -97,24 +88,7 @@ public class ProccessServiceImpl implements IProcessService {
         response.getOutputStream().write(b);
     }
 
-    @Override
-    public ResultMsgBO getBackNodes(String processInstanceId) {
-        List<ActivityInstance> userTask = runtimeService.createActivityInstanceQuery()
-                .processInstanceId(processInstanceId)
-                .activityType("userTask")
-                .finished()
-                .list();
-        List<ActivityInstance> list = userTask.stream().filter(taskUtils.distinctByKey(ActivityInstance::getActivityId)).sorted(Comparator.comparing(ActivityInstance::getEndTime)).collect(Collectors.toList());
-        List<Map<String, Object>> nodes = new ArrayList<>();
-        Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("activityId", o.getActivityId());
-                    map.put("name", o.getActivityName());
-                    nodes.add(map);
-                });
-        return new ResultMsgBO(0, "ok", nodes);
-    }
+
 
 
 

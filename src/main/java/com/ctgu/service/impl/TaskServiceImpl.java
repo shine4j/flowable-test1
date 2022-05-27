@@ -2,10 +2,12 @@ package com.ctgu.service.impl;
 
 import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.service.ITaskService;
+import com.ctgu.util.TaskUtils;
 import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
 import org.flowable.engine.*;
 import org.flowable.engine.history.HistoricProcessInstance;
+import org.flowable.engine.runtime.ActivityInstance;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.history.HistoricTaskInstance;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author beck_guo
@@ -34,6 +37,11 @@ public class TaskServiceImpl implements ITaskService {
 
     @Autowired
     private HistoryService historyService;
+
+
+    @Autowired
+    private TaskUtils taskUtils;
+
 
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -153,6 +161,25 @@ public class TaskServiceImpl implements ITaskService {
             });
         });
         return new ResultMsgBO(0,"ok",tasks);
+    }
+
+    @Override
+    public ResultMsgBO getBackNodes(String processInstanceId) {
+        List<ActivityInstance> userTask = runtimeService.createActivityInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .activityType("userTask")
+                .finished()
+                .list();
+        List<ActivityInstance> list = userTask.stream().filter(taskUtils.distinctByKey(ActivityInstance::getActivityId)).sorted(Comparator.comparing(ActivityInstance::getEndTime)).collect(Collectors.toList());
+        List<Map<String, Object>> nodes = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("activityId", o.getActivityId());
+                    map.put("name", o.getActivityName());
+                    nodes.add(map);
+                });
+        return new ResultMsgBO(0, "ok", nodes);
     }
 
 }
