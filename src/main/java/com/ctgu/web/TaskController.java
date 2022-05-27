@@ -41,6 +41,11 @@ public class TaskController {
         return iTaskService.getHisTask(username);
     }
 
+    @GetMapping(value = "getMyStart/{username}")
+    public ResultMsgBO getMyStart(@PathVariable String username) {
+        return iTaskService.getMyStart(username);
+    }
+
 
     @GetMapping("getTaskIng")
     public ResultMsgBO taskIng(){

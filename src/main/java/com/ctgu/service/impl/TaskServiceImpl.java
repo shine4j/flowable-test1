@@ -5,6 +5,7 @@ import com.ctgu.service.ITaskService;
 import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
 import org.flowable.engine.*;
+import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.history.HistoricTaskInstance;
@@ -75,6 +76,24 @@ public class TaskServiceImpl implements ITaskService {
                     tasks.add(map);
                 });
         return new ResultMsgBO(0,"ok",tasks);
+    }
+
+    @Override
+    public ResultMsgBO getMyStart(String username) {
+        List<HistoricProcessInstance> list = historyService
+                .createHistoricProcessInstanceQuery()
+                .startedBy(username)
+                .list();
+        List<Map<String, Object>> process = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("processDefinitionName", o.getProcessDefinitionName());
+                    map.put("processId", o.getId());
+                    map.put("startTime", sdf.format(o.getStartTime()));
+                    process.add(map);
+                });
+        return new ResultMsgBO(0, "ok", process);
     }
 
     @Override

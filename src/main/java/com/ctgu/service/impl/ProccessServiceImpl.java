@@ -117,23 +117,7 @@ public class ProccessServiceImpl implements IProcessService {
     }
 
 
-    @Override
-    public ResultMsgBO getStart(String username) {
-        List<HistoricProcessInstance> list = historyService
-                .createHistoricProcessInstanceQuery()
-                .startedBy(username)
-                .list();
-        List<Map<String, Object>> process = new ArrayList<>();
-        Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("processDefinitionName", o.getProcessDefinitionName());
-                    map.put("processId", o.getId());
-                    map.put("startTime", sdf.format(o.getStartTime()));
-                    process.add(map);
-                });
-        return new ResultMsgBO(0, "ok", process);
-    }
+
 
     @Override
     public ResultMsgBO startByKey(String key,String username) {

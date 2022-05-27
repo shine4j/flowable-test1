@@ -20,6 +20,13 @@ public interface ITaskService {
      */
     ResultMsgBO getHisTask(String username);
 
+
+    /**
+     * 我提交的实例
+     */
+    ResultMsgBO getMyStart(String username);
+
+
     /**
      *正在运行的任务
      */

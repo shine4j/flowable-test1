@@ -33,10 +33,6 @@ public interface IProcessService {
      */
     ResultMsgBO getFish();
 
-    /**
-     * 我提交的实例
-     */
-    ResultMsgBO getStart(String username);
 
     /**
      *启动流程
