@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class PageQueryBO {
 
-    private int startIndex;
-
-    private int pageSize;
+    private int pageIndex;
+    private int pageSize = 20;
+    private int pageNum;
 }
