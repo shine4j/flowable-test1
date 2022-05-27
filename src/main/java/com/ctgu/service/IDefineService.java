@@ -10,4 +10,9 @@ import com.ctgu.model.BO.ResultMsgBO;
 public interface IDefineService {
 
     ResultMsgBO getAllDefine();
+
+    /**
+     *启动流程
+     */
+    ResultMsgBO startByKey(String key,String username);
 }

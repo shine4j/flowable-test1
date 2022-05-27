@@ -31,11 +31,6 @@ public interface IProcessService {
 
 
     /**
-     *启动流程
-     */
-    ResultMsgBO startByKey(String key,String username);
-
-    /**
      *实例的审批记录
      */
     ResultMsgBO applyNodes(String processInstanceId);

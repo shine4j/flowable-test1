@@ -44,8 +44,7 @@ public class ProccessServiceImpl implements IProcessService {
     @Autowired
     private FlowProcessDiagramGenerator flowProcessDiagramGenerator;
 
-    @Autowired
-    private IdentityService identityService;
+
 
     @Autowired
     ManagementService managementService;
@@ -93,16 +92,6 @@ public class ProccessServiceImpl implements IProcessService {
 
 
 
-    @Override
-    public ResultMsgBO startByKey(String key,String username) {
-        identityService.setAuthenticatedUserId(username);
-        Map<String, Object> varMap = new HashMap<>();
-        varMap.put("initiator", "");
-        varMap.put("skip", true);
-        varMap.put("_FLOWABLE_SKIP_EXPRESSION_ENABLED", true);
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey(key, varMap);
-        return new ResultMsgBO(0, "ok", null);
-    }
 
     @Override
     public ResultMsgBO applyNodes(String processInstanceId) {

@@ -28,10 +28,7 @@ public class ProcessController {
 
 
 
-    @GetMapping(value = "start/{key}/{username}")
-    public ResultMsgBO startByKey(@PathVariable String key,@PathVariable String username) {
-        return iProcessService.startByKey(key,username);
-    }
+
 
     @GetMapping(value = "getApplyNodes/{processInstanceId}")
     public ResultMsgBO getApplyNodes(@PathVariable String processInstanceId) {
