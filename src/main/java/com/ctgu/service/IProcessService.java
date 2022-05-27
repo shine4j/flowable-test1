@@ -24,9 +24,14 @@ public interface IProcessService {
 
 
     /**
-     *未完成实例
+     *运行中的实例
      */
     ResultMsgBO getNoFish();
+
+    /**
+     *已完成的实例
+     */
+    ResultMsgBO getFish();
 
     /**
      * 我提交的实例
@@ -36,7 +41,7 @@ public interface IProcessService {
     /**
      *启动流程
      */
-    ResultMsgBO startByKey(String key);
+    ResultMsgBO startByKey(String key,String username);
 
     /**
      *实例的审批记录

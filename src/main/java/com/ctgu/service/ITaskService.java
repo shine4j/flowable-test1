@@ -16,14 +16,20 @@ public interface ITaskService {
     ResultMsgBO getMyTask(String username);
 
     /**
-     * 已审批任务
+     * 查询我已审批任务
      */
-    ResultMsgBO getHisTask();
+    ResultMsgBO getHisTask(String username);
 
     /**
      *正在运行的任务
      */
     ResultMsgBO taskIng();
+
+
+    /**
+     *已经完成的任务
+     */
+    ResultMsgBO taskEnd();
 
 
     /**

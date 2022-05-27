@@ -31,9 +31,9 @@ public class ProcessController {
        return iProcessService.getStart(username);
     }
 
-    @GetMapping(value = "start/{key}")
-    public ResultMsgBO startByKey(@PathVariable String key) {
-        return iProcessService.startByKey(key);
+    @GetMapping(value = "start/{key}/{username}")
+    public ResultMsgBO startByKey(@PathVariable String key,@PathVariable String username) {
+        return iProcessService.startByKey(key,username);
     }
 
     @GetMapping(value = "getApplyNodes/{processInstanceId}")
@@ -44,6 +44,11 @@ public class ProcessController {
     @GetMapping(value = "getNoFish")
     public ResultMsgBO noFish() {
         return iProcessService.getNoFish();
+    }
+
+    @GetMapping(value = "getFish")
+    public ResultMsgBO fish() {
+        return iProcessService.getFish();
     }
 
 }

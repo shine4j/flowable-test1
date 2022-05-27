@@ -36,9 +36,9 @@ public class TaskController {
         return iProcessService.getBackNodes(processInstanceId);
     }
 
-    @GetMapping("getHisTask")
-    public ResultMsgBO getHisTask(){
-        return iTaskService.getHisTask();
+    @GetMapping("getHisTask/{username}")
+    public ResultMsgBO getHisTask(@PathVariable String username){
+        return iTaskService.getHisTask(username);
     }
 
 
@@ -60,5 +60,10 @@ public class TaskController {
         TaskBaseHandle baseHandle=ApplicationContextUtils.popBean(type);
         baseHandle.execute(model);
         return new ResultMsgBO(0,"ok",null);
+    }
+
+    @GetMapping("getTaskEnd")
+    public ResultMsgBO getTaskEnd(){
+        return iTaskService.taskEnd();
     }
 }

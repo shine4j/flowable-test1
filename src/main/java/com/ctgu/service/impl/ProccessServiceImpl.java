@@ -136,8 +136,8 @@ public class ProccessServiceImpl implements IProcessService {
     }
 
     @Override
-    public ResultMsgBO startByKey(String key) {
-        identityService.setAuthenticatedUserId("beck_guo");
+    public ResultMsgBO startByKey(String key,String username) {
+        identityService.setAuthenticatedUserId(username);
         Map<String, Object> varMap = new HashMap<>();
         varMap.put("initiator", "");
         varMap.put("skip", true);
@@ -180,6 +180,25 @@ public class ProccessServiceImpl implements IProcessService {
                     map.put("definitionName", o.getProcessDefinitionName());
                     map.put("startUserId", o.getStartUserId());
                     map.put("status",o.isSuspended()==false?"activate":"suspended");
+                    process.add(map);
+                });
+        return new ResultMsgBO(0, "ok", process);
+    }
+
+    @Override
+    public ResultMsgBO getFish() {
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery()
+                .finished()
+                .list();
+        List<Map<String, Object>> process = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", o.getId());
+                    map.put("definitionName", o.getProcessDefinitionName());
+                    map.put("startUserId", o.getStartUserId());
+                    map.put("startTime", sdf.format(o.getStartTime()));
+                    map.put("endTime", sdf.format(o.getEndTime()));
                     process.add(map);
                 });
         return new ResultMsgBO(0, "ok", process);
