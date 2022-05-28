@@ -1,5 +1,6 @@
 package com.ctgu.service.impl;
 
+import com.ctgu.model.BO.AddFlowBO;
 import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.service.IDefineService;
 import org.flowable.engine.IdentityService;
@@ -48,13 +49,14 @@ public class DefineServiceImpl implements IDefineService {
 
 
     @Override
-    public ResultMsgBO startByKey(String key,String username) {
-        identityService.setAuthenticatedUserId(username);
+    public ResultMsgBO startByKey(AddFlowBO model) {
+        identityService.setAuthenticatedUserId(model.getUsername());
         Map<String, Object> varMap = new HashMap<>();
         varMap.put("initiator", "");
         varMap.put("skip", true);
         varMap.put("_FLOWABLE_SKIP_EXPRESSION_ENABLED", true);
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey(key, varMap);
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey(model.getKey(), varMap);
+        runtimeService.setProcessInstanceName(instance.getId(),model.getSubject());
         return new ResultMsgBO(0, "ok", null);
     }
 }

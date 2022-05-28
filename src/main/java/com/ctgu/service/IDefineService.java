@@ -1,5 +1,6 @@
 package com.ctgu.service;
 
+import com.ctgu.model.BO.AddFlowBO;
 import com.ctgu.model.BO.ResultMsgBO;
 
 /**
@@ -14,5 +15,5 @@ public interface IDefineService {
     /**
      *启动流程
      */
-    ResultMsgBO startByKey(String key,String username);
+    ResultMsgBO startByKey(AddFlowBO model);
 }

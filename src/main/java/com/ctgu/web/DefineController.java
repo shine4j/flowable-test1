@@ -1,12 +1,10 @@
 package com.ctgu.web;
 
+import com.ctgu.model.BO.AddFlowBO;
 import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.service.IDefineService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author beck_guo
@@ -25,8 +23,8 @@ public class DefineController {
         return iDefineService.getAllDefine();
     }
 
-    @GetMapping(value = "start/{key}/{username}")
-    public ResultMsgBO startByKey(@PathVariable String key, @PathVariable String username) {
-        return iDefineService.startByKey(key,username);
+    @PostMapping(value = "start")
+    public ResultMsgBO startByKey(@RequestBody AddFlowBO model) {
+        return iDefineService.startByKey(model);
     }
 }
