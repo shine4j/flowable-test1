@@ -2,13 +2,20 @@ package com.ctgu.web;
 
 import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.model.BO.TaskHandleBO;
+import com.ctgu.model.BO.TaskQueryBO;
+import com.ctgu.model.BO.pager.PageQueryBO;
+import com.ctgu.model.BO.pager.PagerModel;
+import com.ctgu.model.VO.TaskVo;
 import com.ctgu.model.types.TaskHandleEnum;
 import com.ctgu.service.IProcessService;
 import com.ctgu.service.ITaskService;
 import com.ctgu.service.TaskBaseHandle;
 import com.ctgu.util.ApplicationContextUtils;
+import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 /**
@@ -26,9 +33,11 @@ public class TaskController {
     @Autowired
     IProcessService iProcessService;
 
-    @GetMapping("getMyTask/{username}")
-    public ResultMsgBO getMyTask(@PathVariable String username){
-        return iTaskService.getMyTask(username);
+    @GetMapping("getMyTask")
+    public ResultMsgBO getMyTask(TaskQueryBO params, PageQueryBO query){
+        Page<TaskVo> myTask = iTaskService.getMyTask(params, query);
+        return new ResultMsgBO(0,"ok",myTask);
+
     }
 
     @GetMapping("getBackNodes/{processInstanceId}")

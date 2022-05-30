@@ -1,4 +1,4 @@
-package com.ctgu.model.BO;
+package com.ctgu.model.BO.pager;
 
 import lombok.Data;
 

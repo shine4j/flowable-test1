@@ -1,7 +1,13 @@
 package com.ctgu.service;
 
+import com.ctgu.model.BO.pager.PageQueryBO;
 import com.ctgu.model.BO.ResultMsgBO;
-import com.ctgu.model.BO.TaskHandleBO;
+import com.ctgu.model.BO.TaskQueryBO;
+import com.ctgu.model.BO.pager.PagerModel;
+import com.ctgu.model.VO.TaskVo;
+import com.github.pagehelper.Page;
+
+import java.util.Map;
 
 /**
  * @Author beck_guo
@@ -13,7 +19,7 @@ public interface ITaskService {
     /**
      * 查询我的任务
      */
-    ResultMsgBO getMyTask(String username);
+    Page<TaskVo> getMyTask(TaskQueryBO params, PageQueryBO query);
 
     /**
      * 查询我已审批任务

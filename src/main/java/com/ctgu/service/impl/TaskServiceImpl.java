@@ -1,8 +1,15 @@
 package com.ctgu.service.impl;
 
+import com.ctgu.dao.TaskDao;
+import com.ctgu.model.BO.pager.PageQueryBO;
 import com.ctgu.model.BO.ResultMsgBO;
+import com.ctgu.model.BO.TaskQueryBO;
+import com.ctgu.model.BO.pager.PagerModel;
+import com.ctgu.model.VO.TaskVo;
 import com.ctgu.service.ITaskService;
 import com.ctgu.util.TaskUtils;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
 import org.flowable.engine.*;
@@ -42,25 +49,17 @@ public class TaskServiceImpl implements ITaskService {
     @Autowired
     private TaskUtils taskUtils;
 
+    @Autowired
+    private TaskDao taskDao;
+
 
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    public ResultMsgBO getMyTask(String username) {
-        List<Task> list = taskService.createTaskQuery()
-                .taskCandidateOrAssigned(username).list();
-        List<Map<String,Object>> tasks = new ArrayList<>();
-        Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o->{
-                    Map<String,Object> map =  new HashMap<>();
-                    map.put("taskId",o.getId());
-                    map.put("processId",o.getProcessInstanceId());
-                    map.put("name",o.getName());
-                    map.put("createTime",sdf.format(o.getCreateTime()));
-                    map.put("formKey",o.getFormKey());
-                    tasks.add(map);
-                });
-        return new ResultMsgBO(0,"ok",tasks);
+    public Page<TaskVo> getMyTask(TaskQueryBO params, PageQueryBO query) {
+        PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        Page<TaskVo> myTask = taskDao.getMyTask(params);
+        return myTask;
     }
 
 
