@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ctgu.dao.TaskDao" >
-    <select id="getMyTask" parameterType="com.ctgu.model.BO.TaskQueryBO" resultType="com.ctgu.model.VO.TaskVo">
+    <select id="getMyTask" parameterType="com.ctgu.model.BO.TaskQueryBO" resultType="map">
         SELECT DISTINCT
             t1.ID_ AS taskId,
             t1.NAME_ AS taskName,
@@ -47,6 +47,21 @@
                             )
                     )
             )
+    </select>
+
+
+    <select id="getMyHisTask" parameterType="com.ctgu.model.BO.TaskQueryBO" resultType="map">
+        SELECT DISTINCT
+            RES.NAME_ as name,
+            RES.START_TIME_ as startTime,
+            RES.END_TIME_ as endTime
+        FROM
+            ACT_HI_TASKINST RES
+        WHERE
+            RES.ASSIGNEE_ = #{username}
+          AND RES.END_TIME_ IS NOT NULL
+        ORDER BY
+            RES.ID_ ASC
     </select>
 
 </mapper>

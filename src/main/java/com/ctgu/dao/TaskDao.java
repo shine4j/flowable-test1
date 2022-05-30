@@ -15,5 +15,7 @@ import java.util.Map;
  */
 public interface TaskDao {
 
-    Page<TaskVo> getMyTask(TaskQueryBO params);
+    Page<Map> getMyTask(TaskQueryBO params);
+
+    Page<Map> getMyHisTask(TaskQueryBO params);
 }

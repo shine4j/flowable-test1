@@ -19,12 +19,12 @@ public interface ITaskService {
     /**
      * 查询我的任务
      */
-    PagerModel<TaskVo> getMyTask(TaskQueryBO params, PageQueryBO query);
+    PagerModel<Map> getMyTask(TaskQueryBO params, PageQueryBO query);
 
     /**
      * 查询我已审批任务
      */
-    ResultMsgBO getHisTask(String username);
+    PagerModel<Map> getMyHisTask(TaskQueryBO params, PageQueryBO query);
 
 
     /**

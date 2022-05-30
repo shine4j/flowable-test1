@@ -35,7 +35,7 @@ public class TaskController {
 
     @GetMapping("getMyTask")
     public ResultMsgBO getMyTask(TaskQueryBO params, PageQueryBO query){
-        PagerModel<TaskVo> myTask = iTaskService.getMyTask(params, query);
+        PagerModel<Map> myTask = iTaskService.getMyTask(params, query);
         return new ResultMsgBO(0,"ok",myTask);
 
     }
@@ -45,9 +45,10 @@ public class TaskController {
         return iTaskService.getBackNodes(processInstanceId);
     }
 
-    @GetMapping("getHisTask/{username}")
-    public ResultMsgBO getHisTask(@PathVariable String username){
-        return iTaskService.getHisTask(username);
+    @GetMapping("getHisTask")
+    public ResultMsgBO getMyHisTask(TaskQueryBO params, PageQueryBO query){
+        PagerModel<Map> myTask = iTaskService.getMyHisTask(params, query);
+        return new ResultMsgBO(0,"ok",myTask);
     }
 
     @GetMapping(value = "getMyStart/{username}")

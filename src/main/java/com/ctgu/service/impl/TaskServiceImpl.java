@@ -56,33 +56,18 @@ public class TaskServiceImpl implements ITaskService {
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    public PagerModel<TaskVo> getMyTask(TaskQueryBO params, PageQueryBO query) {
+    public PagerModel<Map> getMyTask(TaskQueryBO params, PageQueryBO query) {
         PageHelper.startPage(query.getPageNum(),query.getPageSize());
-        Page<TaskVo> myTask = taskDao.getMyTask(params);
-        return new PagerModel<>(myTask);
+        Page<Map> myTask = taskDao.getMyTask(params);
+        return new PagerModel<Map>(myTask);
     }
 
 
     @Override
-    public ResultMsgBO getHisTask(String username) {
-        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
-                .taskAssignee(username)
-                .finished()
-                .list();
-        List<Map<String,Object>> tasks = new ArrayList<>();
-        Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o->{
-                    Map<String,Object> map =  new HashMap<>();
-                    map.put("name",o.getName());
-                    map.put("taskId",o.getId());
-                    map.put("processId",o.getProcessInstanceId());
-                    map.put("assignee",o.getAssignee());
-                    map.put("createTime",sdf.format(o.getCreateTime()));
-                    map.put("endTime",sdf.format(o.getEndTime()));
-                    map.put("duration",o.getDurationInMillis());
-                    tasks.add(map);
-                });
-        return new ResultMsgBO(0,"ok",tasks);
+    public PagerModel<Map> getMyHisTask(TaskQueryBO params, PageQueryBO query) {
+        PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        Page<Map> myTask = taskDao.getMyHisTask(params);
+        return new PagerModel<Map>(myTask);
     }
 
     @Override
