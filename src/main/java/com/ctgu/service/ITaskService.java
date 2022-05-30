@@ -19,7 +19,7 @@ public interface ITaskService {
     /**
      * 查询我的任务
      */
-    Page<TaskVo> getMyTask(TaskQueryBO params, PageQueryBO query);
+    PagerModel<TaskVo> getMyTask(TaskQueryBO params, PageQueryBO query);
 
     /**
      * 查询我已审批任务

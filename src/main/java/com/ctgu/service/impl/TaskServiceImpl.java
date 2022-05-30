@@ -56,10 +56,10 @@ public class TaskServiceImpl implements ITaskService {
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    public Page<TaskVo> getMyTask(TaskQueryBO params, PageQueryBO query) {
+    public PagerModel<TaskVo> getMyTask(TaskQueryBO params, PageQueryBO query) {
         PageHelper.startPage(query.getPageNum(),query.getPageSize());
         Page<TaskVo> myTask = taskDao.getMyTask(params);
-        return myTask;
+        return new PagerModel<>(myTask);
     }
 
 

@@ -35,7 +35,7 @@ public class TaskController {
 
     @GetMapping("getMyTask")
     public ResultMsgBO getMyTask(TaskQueryBO params, PageQueryBO query){
-        Page<TaskVo> myTask = iTaskService.getMyTask(params, query);
+        PagerModel<TaskVo> myTask = iTaskService.getMyTask(params, query);
         return new ResultMsgBO(0,"ok",myTask);
 
     }
