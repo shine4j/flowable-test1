@@ -30,19 +30,19 @@ public interface ITaskService {
     /**
      * 我提交的实例
      */
-    ResultMsgBO getMyStart(String username);
+    PagerModel<Map> getMyStart(TaskQueryBO params,PageQueryBO query);
 
 
     /**
      *正在运行的任务
      */
-    ResultMsgBO taskIng();
+    PagerModel<Map> taskIng(TaskQueryBO params,PageQueryBO query);
 
 
     /**
      *已经完成的任务
      */
-    ResultMsgBO taskEnd();
+    PagerModel<Map> taskEnd(TaskQueryBO params,PageQueryBO query);
 
 
     /**

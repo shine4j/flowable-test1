@@ -18,4 +18,10 @@ public interface TaskDao {
     Page<Map> getMyTask(TaskQueryBO params);
 
     Page<Map> getMyHisTask(TaskQueryBO params);
+
+    Page<Map> getMyStart(TaskQueryBO params);
+
+    Page<Map> taskIng(TaskQueryBO params);
+
+    Page<Map> taskEnd(TaskQueryBO params);
 }

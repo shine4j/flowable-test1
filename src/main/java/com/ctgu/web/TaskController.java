@@ -51,15 +51,23 @@ public class TaskController {
         return new ResultMsgBO(0,"ok",myTask);
     }
 
-    @GetMapping(value = "getMyStart/{username}")
-    public ResultMsgBO getMyStart(@PathVariable String username) {
-        return iTaskService.getMyStart(username);
+    @GetMapping(value = "getMyStart")
+    public ResultMsgBO getMyStart(TaskQueryBO parms,PageQueryBO query) {
+        PagerModel<Map> myStart = iTaskService.getMyStart(parms, query);
+        return  new ResultMsgBO(0,"ok",myStart);
     }
 
 
     @GetMapping("getTaskIng")
-    public ResultMsgBO taskIng(){
-        return iTaskService.taskIng();
+    public ResultMsgBO taskIng(TaskQueryBO parms,PageQueryBO query){
+        PagerModel<Map> taskIng = iTaskService.taskIng(parms, query);
+        return  new ResultMsgBO(0,"ok",taskIng);
+    }
+
+    @GetMapping("getTaskEnd")
+    public ResultMsgBO getTaskEnd(TaskQueryBO parms,PageQueryBO query){
+        PagerModel<Map> taskEnd = iTaskService.taskEnd(parms, query);
+        return  new ResultMsgBO(0,"ok",taskEnd);
     }
 
 
@@ -77,8 +85,5 @@ public class TaskController {
         return new ResultMsgBO(0,"ok",null);
     }
 
-    @GetMapping("getTaskEnd")
-    public ResultMsgBO getTaskEnd(){
-        return iTaskService.taskEnd();
-    }
+
 }

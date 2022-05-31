@@ -71,59 +71,24 @@ public class TaskServiceImpl implements ITaskService {
     }
 
     @Override
-    public ResultMsgBO getMyStart(String username) {
-        List<HistoricProcessInstance> list = historyService
-                .createHistoricProcessInstanceQuery()
-                .startedBy(username)
-                .list();
-        List<Map<String, Object>> process = new ArrayList<>();
-        Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("processDefinitionName", o.getProcessDefinitionName());
-                    map.put("processId", o.getId());
-                    map.put("startTime", sdf.format(o.getStartTime()));
-                    process.add(map);
-                });
-        return new ResultMsgBO(0, "ok", process);
+    public PagerModel<Map> getMyStart(TaskQueryBO parms,PageQueryBO query) {
+        PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        Page<Map> myStart = taskDao.getMyStart(parms);
+        return new PagerModel<Map>(myStart);
     }
 
     @Override
-    public ResultMsgBO taskIng() {
-        List<Task> list = taskService.createTaskQuery()
-                .list();
-        List<Map<String,Object>> tasks = new ArrayList<>();
-        Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o->{
-                    Map<String,Object> map =  new HashMap<>();
-                    map.put("taskId",o.getId());
-                    map.put("processId",o.getProcessInstanceId());
-                    map.put("name",o.getName());
-                    map.put("createTime",sdf.format(o.getCreateTime()));
-                    map.put("formKey",o.getFormKey());
-                    tasks.add(map);
-                });
-        return new ResultMsgBO(0,"ok",tasks);
+    public PagerModel<Map> taskIng(TaskQueryBO parms,PageQueryBO query) {
+        PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        Page<Map> taskIng = taskDao.taskIng(parms);
+        return new PagerModel<Map>(taskIng);
     }
 
     @Override
-    public ResultMsgBO taskEnd() {
-        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
-                .finished()
-                .list();
-        List<Map<String,Object>> tasks = new ArrayList<>();
-        Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o->{
-                    Map<String,Object> map =  new HashMap<>();
-                    map.put("taskId",o.getId());
-                    map.put("processId",o.getProcessInstanceId());
-                    map.put("name",o.getName());
-                    map.put("createTime",sdf.format(o.getCreateTime()));
-                    map.put("endTime",sdf.format(o.getEndTime()));
-                    map.put("formKey",o.getFormKey());
-                    tasks.add(map);
-                });
-        return new ResultMsgBO(0,"ok",tasks);
+    public PagerModel<Map> taskEnd(TaskQueryBO parms,PageQueryBO query) {
+        PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        Page<Map> taskEnd = taskDao.taskEnd(parms);
+        return new PagerModel<Map>(taskEnd);
     }
 
 
