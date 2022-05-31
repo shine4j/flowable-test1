@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ctgu.dao.ProcessDao" >
+
+    <select id="getNoFish" parameterType="com.ctgu.model.BO.ProcessQueryBO" resultType="map">
+        SELECT DISTINCT
+            RES.PROC_INST_ID_ as id,
+            p.NAME_  as definitionName,
+            RES.START_USER_ID_ AS startUserId,
+            RES.SUSPENSION_STATE_ as suspensionState
+        FROM
+            ACT_RU_EXECUTION RES
+                INNER JOIN ACT_RE_PROCDEF P ON RES.PROC_DEF_ID_ = P.ID_
+        WHERE
+            RES.PARENT_ID_ IS NULL
+        ORDER BY
+            RES.ID_ ASC
+    </select>
+
+    <select id="getFish" parameterType="com.ctgu.model.BO.ProcessQueryBO" resultType="map">
+        SELECT DISTINCT
+            RES.ID_ AS id,
+            RES.START_USER_ID_ AS startUserId,
+            RES.START_TIME_ AS startTime,
+            RES.END_TIME_ AS endTime,
+            DEF.NAME_ AS definitionName
+        FROM
+            ACT_HI_PROCINST RES
+                LEFT OUTER JOIN ACT_RE_PROCDEF DEF ON RES.PROC_DEF_ID_ = DEF.ID_
+        WHERE
+            RES.END_TIME_ IS NOT NULL
+        ORDER BY
+            RES.ID_ ASC
+    </select>
+
+</mapper>

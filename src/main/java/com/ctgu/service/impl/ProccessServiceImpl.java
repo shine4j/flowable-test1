@@ -1,11 +1,17 @@
 package com.ctgu.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.ctgu.dao.ProcessDao;
+import com.ctgu.model.BO.ProcessQueryBO;
 import com.ctgu.model.BO.ResultMsgBO;
+import com.ctgu.model.BO.pager.PageQueryBO;
+import com.ctgu.model.BO.pager.PagerModel;
 import com.ctgu.model.PO.RolePO;
 import com.ctgu.cmd.TaskApplyUserCmd;
 import com.ctgu.service.IProcessService;
 import com.ctgu.util.FlowProcessDiagramGenerator;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.flowable.bpmn.constants.BpmnXMLConstants;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.common.engine.impl.util.IoUtil;
@@ -44,12 +50,13 @@ public class ProccessServiceImpl implements IProcessService {
     @Autowired
     private FlowProcessDiagramGenerator flowProcessDiagramGenerator;
 
-
-
     @Autowired
     ManagementService managementService;
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    @Autowired
+    private ProcessDao processDao;
 
     @Override
     public void getImage(String processInstanceId, HttpServletResponse response) throws IOException {
@@ -116,39 +123,17 @@ public class ProccessServiceImpl implements IProcessService {
     }
 
     @Override
-    public ResultMsgBO getNoFish() {
-        List<ProcessInstance> list = runtimeService.createProcessInstanceQuery()
-                .list();
-        List<Map<String, Object>> process = new ArrayList<>();
-        Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("id", o.getId());
-                    map.put("definitionName", o.getProcessDefinitionName());
-                    map.put("startUserId", o.getStartUserId());
-                    map.put("status",o.isSuspended()==false?"activate":"suspended");
-                    process.add(map);
-                });
-        return new ResultMsgBO(0, "ok", process);
+    public PagerModel<Map> getNoFish(ProcessQueryBO params, PageQueryBO query) {
+        PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        Page<Map> taskIng = processDao.getNoFish(params);
+        return new PagerModel<Map>(taskIng);
     }
 
     @Override
-    public ResultMsgBO getFish() {
-        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery()
-                .finished()
-                .list();
-        List<Map<String, Object>> process = new ArrayList<>();
-        Optional.ofNullable(list).orElse(new ArrayList<>())
-                .forEach(o -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("id", o.getId());
-                    map.put("definitionName", o.getProcessDefinitionName());
-                    map.put("startUserId", o.getStartUserId());
-                    map.put("startTime", sdf.format(o.getStartTime()));
-                    map.put("endTime", sdf.format(o.getEndTime()));
-                    process.add(map);
-                });
-        return new ResultMsgBO(0, "ok", process);
+    public PagerModel<Map> getFish(ProcessQueryBO params, PageQueryBO query) {
+        PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        Page<Map> taskIng = processDao.getFish(params);
+        return new PagerModel<Map>(taskIng);
     }
 
 

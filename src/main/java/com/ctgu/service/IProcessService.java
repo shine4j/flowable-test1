@@ -1,9 +1,14 @@
 package com.ctgu.service;
 
+import com.ctgu.model.BO.ProcessQueryBO;
 import com.ctgu.model.BO.ResultMsgBO;
+import com.ctgu.model.BO.TaskQueryBO;
+import com.ctgu.model.BO.pager.PageQueryBO;
+import com.ctgu.model.BO.pager.PagerModel;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @Author beck_guo
@@ -22,12 +27,12 @@ public interface IProcessService {
     /**
      *运行中的实例
      */
-    ResultMsgBO getNoFish();
+    PagerModel<Map> getNoFish(ProcessQueryBO params, PageQueryBO query);
 
     /**
      *已完成的实例
      */
-    ResultMsgBO getFish();
+    PagerModel<Map> getFish(ProcessQueryBO params, PageQueryBO query);
 
 
     /**

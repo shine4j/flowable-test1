@@ -1,12 +1,17 @@
 package com.ctgu.web;
 
+import com.ctgu.model.BO.ProcessQueryBO;
 import com.ctgu.model.BO.ResultMsgBO;
+import com.ctgu.model.BO.TaskQueryBO;
+import com.ctgu.model.BO.pager.PageQueryBO;
+import com.ctgu.model.BO.pager.PagerModel;
 import com.ctgu.service.IProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @Author beck_guo
@@ -36,13 +41,15 @@ public class ProcessController {
     }
 
     @GetMapping(value = "getNoFish")
-    public ResultMsgBO noFish() {
-        return iProcessService.getNoFish();
+    public ResultMsgBO noFish(ProcessQueryBO parms, PageQueryBO query) {
+        PagerModel<Map> processNoFish = iProcessService.getNoFish(parms, query);
+        return  new ResultMsgBO(0,"ok",processNoFish);
     }
 
     @GetMapping(value = "getFish")
-    public ResultMsgBO fish() {
-        return iProcessService.getFish();
+    public ResultMsgBO fish(ProcessQueryBO parms, PageQueryBO query) {
+        PagerModel<Map> processFish = iProcessService.getFish(parms, query);
+        return  new ResultMsgBO(0,"ok",processFish);
     }
 
 }
