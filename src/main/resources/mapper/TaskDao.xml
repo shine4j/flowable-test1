@@ -4,18 +4,19 @@
     <select id="getMyTask" parameterType="com.ctgu.model.BO.TaskQueryBO" resultType="map">
         SELECT DISTINCT
             t1.ID_ AS taskId,
+            p.NAME_ AS SUBJECT,
             t1.NAME_ AS taskName,
-            t2.NAME_ AS formKey,
-            t2.BUSINESS_KEY_ AS businessKey,
-            t2.PROC_INST_ID_ AS processId,
+            t1.FORM_KEY_ AS formKey,
+            p.BUSINESS_KEY_ AS businessKey,
+            p.PROC_INST_ID_ AS processId,
             DATE_FORMAT(
                     t1.CREATE_TIME_,
                     '%Y/%m/%d %H:%i:%s'
                 ) AS startTime
         FROM
             act_ru_task t1
-                INNER JOIN act_ru_execution t2 ON t1.PROC_INST_ID_ = t2.PROC_INST_ID_
                 LEFT JOIN act_ru_identitylink t3 ON t3.TASK_ID_ = t1.ID_
+                LEFT JOIN act_hi_procinst p ON t1.PROC_INST_ID_ = p.PROC_INST_ID_
         WHERE
              (
                 t1.ASSIGNEE_ = #{username}
