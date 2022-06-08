@@ -4,7 +4,7 @@
     <select id="getMyTask" parameterType="com.ctgu.model.BO.TaskQueryBO" resultType="map">
         SELECT DISTINCT
             t1.ID_ AS taskId,
-            p.NAME_ AS SUBJECT,
+            p.NAME_ AS subject,
             t1.NAME_ AS taskName,
             t1.FORM_KEY_ AS formKey,
             p.BUSINESS_KEY_ AS businessKey,
