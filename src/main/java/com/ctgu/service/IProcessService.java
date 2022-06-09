@@ -22,8 +22,6 @@ public interface IProcessService {
      */
     void getImage(String processInstanceId, HttpServletResponse response) throws IOException;
 
-
-
     /**
      *运行中的实例
      */

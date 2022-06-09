@@ -66,7 +66,7 @@
             RES.ASSIGNEE_ = #{username}
           AND RES.END_TIME_ IS NOT NULL
         ORDER BY
-            RES.ID_ desc
+            RES.START_TIME_ desc
     </select>
 
     <select id="getMyStart" parameterType="com.ctgu.model.BO.TaskQueryBO" resultType="map">
@@ -85,7 +85,7 @@
         WHERE
             RES.START_USER_ID_ = #{username}
         ORDER BY
-            RES.ID_ desc
+            RES.START_TIME_ desc
     </select>
 
     <select id="taskIng" parameterType="com.ctgu.model.BO.TaskQueryBO" resultType="map">
@@ -99,7 +99,7 @@
             ACT_RU_TASK RES
             LEFT JOIN act_hi_procinst p ON RES.PROC_INST_ID_ = p.PROC_INST_ID_
         ORDER BY
-            RES.ID_ desc
+            RES.CREATE_TIME_ desc
     </select>
 
     <select id="taskEnd" parameterType="com.ctgu.model.BO.TaskQueryBO" resultType="map">
@@ -116,7 +116,7 @@
         WHERE
             RES.END_TIME_ IS NOT NULL
         ORDER BY
-            RES.ID_ desc
+            RES.START_TIME_ desc
     </select>
 
 </mapper>

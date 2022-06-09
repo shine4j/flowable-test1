@@ -4,6 +4,7 @@ import com.ctgu.model.BO.ProcessQueryBO;
 import com.ctgu.model.BO.TaskQueryBO;
 import com.github.pagehelper.Page;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,4 +17,6 @@ public interface ProcessDao {
     Page<Map> getNoFish(ProcessQueryBO params);
 
     Page<Map> getFish(ProcessQueryBO params);
+
+    List<Map> applyNodes(String processId);
 }

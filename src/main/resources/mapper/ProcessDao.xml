@@ -5,32 +5,50 @@
     <select id="getNoFish" parameterType="com.ctgu.model.BO.ProcessQueryBO" resultType="map">
         SELECT DISTINCT
             RES.PROC_INST_ID_ as id,
+            s.NAME_ AS subject,
             p.NAME_  as definitionName,
             RES.START_USER_ID_ AS startUserId,
             RES.SUSPENSION_STATE_ as suspensionState
         FROM
             ACT_RU_EXECUTION RES
                 INNER JOIN ACT_RE_PROCDEF P ON RES.PROC_DEF_ID_ = P.ID_
+                LEFT JOIN act_hi_procinst s ON RES.PROC_INST_ID_ = s.PROC_INST_ID_
         WHERE
             RES.PARENT_ID_ IS NULL
         ORDER BY
-            RES.ID_ ASC
+            RES.START_TIME_ desc
     </select>
 
     <select id="getFish" parameterType="com.ctgu.model.BO.ProcessQueryBO" resultType="map">
         SELECT DISTINCT
             RES.ID_ AS id,
+            p.NAME_ AS subject,
             RES.START_USER_ID_ AS startUserId,
             RES.START_TIME_ AS startTime,
             RES.END_TIME_ AS endTime,
             DEF.NAME_ AS definitionName
         FROM
             ACT_HI_PROCINST RES
-                LEFT OUTER JOIN ACT_RE_PROCDEF DEF ON RES.PROC_DEF_ID_ = DEF.ID_
+            LEFT OUTER JOIN ACT_RE_PROCDEF DEF ON RES.PROC_DEF_ID_ = DEF.ID_
+            LEFT JOIN act_hi_procinst p ON RES.PROC_INST_ID_ = p.PROC_INST_ID_
         WHERE
             RES.END_TIME_ IS NOT NULL
         ORDER BY
-            RES.ID_ ASC
+            RES.END_TIME_ desc
+    </select>
+
+
+    <select id="applyNodes" parameterType="string" resultType="map">
+        SELECT
+            s.ID_ as id,
+            s.PROC_INST_ID_ as processId,
+            s.NAME_ as nodeName,
+            s.ASSIGNEE_ as assignee
+        FROM
+            act_ru_task s
+        WHERE
+            s.PROC_INST_ID_=#{processId}
+            and s.EXECUTION_ID_ IS not NULL
     </select>
 
 </mapper>

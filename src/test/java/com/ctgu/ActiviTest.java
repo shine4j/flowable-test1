@@ -2,6 +2,7 @@ package com.ctgu;
 
 
 import com.alibaba.fastjson.JSON;
+import com.ctgu.dao.ProcessDao;
 import com.ctgu.model.PO.RolePO;
 import com.ctgu.cmd.TaskApplyUserCmd;
 import com.ctgu.dao.HisFlowableActinstDao;
@@ -79,6 +80,9 @@ public class ActiviTest {
 
     @Autowired
     HistoryService historyService;
+
+    @Autowired
+    private ProcessDao processDao;
 
 
     public void deploy() throws FileNotFoundException {
@@ -354,7 +358,9 @@ public class ActiviTest {
     }
 
     public void noFishProcess(){
-        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().unfinished().list();
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery()
+                .processInstanceId("f7dc5445-e7c8-11ec-ae22-025041000001")
+                .list();
         list.forEach(s->{
             logger.info("流程名称:{}",s.getProcessDefinitionName());
             logger.info("实例id:{}",s.getId());
@@ -380,7 +386,7 @@ public class ActiviTest {
 
     public void lastApplyUser(){
         List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
-                .processInstanceId("63f8973d-c780-11ec-8b13-025041000001")
+                .processInstanceId("f7dc5445-e7c8-11ec-ae22-025041000001")
                 .finished()
                 .orderByHistoricTaskInstanceEndTime()
                 .desc()
@@ -462,6 +468,23 @@ public class ActiviTest {
         });
     }
 
+    public void currentNode(){
+        List<Map> list = processDao.applyNodes("f7dc5445-e7c8-11ec-ae22-025041000001");
+        List<Map<String, Object>> tasks = new ArrayList<>();
+        Optional.ofNullable(list).orElse(new ArrayList<>())
+                .forEach(o -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("nodeName", o.get("nodeName"));
+                    if (null!=o.get("assignee")) {
+                        List<RolePO> roles = managementService.executeCommand(new TaskApplyUserCmd(o.get("id").toString()));
+                        map.put("assign", JSON.toJSONString(roles));
+                    } else {
+                        map.put("assign",o.get("assignee"));
+                    }
+                    tasks.add(map);
+                });
+    }
+
     @Test
     public void test() throws Exception{
         //deploy();
@@ -491,7 +514,8 @@ public class ActiviTest {
         //getHisComplete();
         //taskDelegated("fa497283-d5bf-11ec-a71b-025041000001");
         //status("871b2ac9-d751-11ec-9849-025041000001");
-        nodes();
+        //nodes();
+        currentNode();
     }
 
 

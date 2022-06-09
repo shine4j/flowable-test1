@@ -95,27 +95,19 @@ public class ProccessServiceImpl implements IProcessService {
     }
 
 
-
-
-
-
-
     @Override
     public ResultMsgBO applyNodes(String processInstanceId) {
-        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
-                .processInstanceId(processInstanceId)
-                .unfinished()
-                .list();
+        List<Map> list = processDao.applyNodes(processInstanceId);
         List<Map<String, Object>> tasks = new ArrayList<>();
         Optional.ofNullable(list).orElse(new ArrayList<>())
                 .forEach(o -> {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("nodeName", o.getName());
-                    if (StringUtils.isBlank(o.getAssignee())) {
-                        List<RolePO> roles = managementService.executeCommand(new TaskApplyUserCmd(o.getId()));
-                        map.put("assign", JSON.toJSONString(roles));
+                    map.put("nodeName", o.get("nodeName"));
+                    if (null!=o.get("assignee")) {
+                        map.put("assign",o.get("assignee"));
                     } else {
-                        map.put("assign", o.getAssignee());
+                        List<RolePO> roles = managementService.executeCommand(new TaskApplyUserCmd(o.get("id").toString()));
+                        map.put("assign", JSON.toJSONString(roles));
                     }
                     tasks.add(map);
                 });
