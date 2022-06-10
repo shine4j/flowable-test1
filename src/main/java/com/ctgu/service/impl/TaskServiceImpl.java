@@ -5,7 +5,6 @@ import com.ctgu.model.BO.pager.PageQueryBO;
 import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.model.BO.TaskQueryBO;
 import com.ctgu.model.BO.pager.PagerModel;
-import com.ctgu.model.VO.TaskVo;
 import com.ctgu.service.ITaskService;
 import com.ctgu.util.TaskUtils;
 import com.github.pagehelper.Page;
@@ -13,15 +12,11 @@ import com.github.pagehelper.PageHelper;
 import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
 import org.flowable.engine.*;
-import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.runtime.ActivityInstance;
 import org.flowable.engine.runtime.ProcessInstance;
-import org.flowable.task.api.Task;
-import org.flowable.task.api.history.HistoricTaskInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,26 +29,16 @@ import java.util.stream.Collectors;
 public class TaskServiceImpl implements ITaskService {
 
     @Autowired
-    private TaskService taskService;
-
-    @Autowired
     private RuntimeService runtimeService;
 
     @Autowired
     RepositoryService repositoryService;
 
     @Autowired
-    private HistoryService historyService;
-
-
-    @Autowired
     private TaskUtils taskUtils;
 
     @Autowired
     private TaskDao taskDao;
-
-
-    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public PagerModel<Map> getMyTask(TaskQueryBO params, PageQueryBO query) {

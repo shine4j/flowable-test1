@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @Author beck_guo
  * @create 2022/5/11 12:01
- * @description
+ * @description 审批流程
  */
 @Data
 public class TaskHandleBO {
@@ -25,4 +25,6 @@ public class TaskHandleBO {
     private String actId;
 
     private String addSignType;
+
+    private AddCommentBO comment;
 }

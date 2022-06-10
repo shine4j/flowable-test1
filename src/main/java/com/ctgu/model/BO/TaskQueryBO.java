@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @Author beck_guo
  * @create 2022/5/28 11:37
- * @description
+ * @description  查询
  */
 @Data
 public class TaskQueryBO {

@@ -1,17 +1,17 @@
 package com.ctgu.web;
 
+import com.ctgu.cmd.AddCommentCmd;
 import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.model.BO.TaskHandleBO;
 import com.ctgu.model.BO.TaskQueryBO;
 import com.ctgu.model.BO.pager.PageQueryBO;
 import com.ctgu.model.BO.pager.PagerModel;
-import com.ctgu.model.VO.TaskVo;
 import com.ctgu.model.types.TaskHandleEnum;
 import com.ctgu.service.IProcessService;
 import com.ctgu.service.ITaskService;
 import com.ctgu.service.TaskBaseHandle;
 import com.ctgu.util.ApplicationContextUtils;
-import com.github.pagehelper.Page;
+import org.flowable.engine.ManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +32,9 @@ public class TaskController {
 
     @Autowired
     IProcessService iProcessService;
+
+    @Autowired
+    ManagementService managementService;
 
     @GetMapping("getMyTask")
     public ResultMsgBO getMyTask(TaskQueryBO params, PageQueryBO query){
@@ -82,6 +85,7 @@ public class TaskController {
         String type = TaskHandleEnum.getServiceByType(model.getType());
         TaskBaseHandle baseHandle=ApplicationContextUtils.popBean(type);
         baseHandle.execute(model);
+        managementService.executeCommand(new AddCommentCmd(model.getComment()));
         return new ResultMsgBO(0,"ok",null);
     }
 

@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @Author beck_guo
  * @create 2022/5/28 8:48
- * @description
+ * @description 启动流程实例
  */
 @Data
 public class AddFlowBO {
