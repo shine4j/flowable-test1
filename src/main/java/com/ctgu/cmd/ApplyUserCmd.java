@@ -17,14 +17,14 @@ import java.util.List;
  * @description
  */
 
-public class TaskApplyUserCmd implements Command<List<RolePO>> {
+public class ApplyUserCmd implements Command<List<RolePO>> {
 
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
     private String taskId;
 
-    public TaskApplyUserCmd(String taskId){
+    public ApplyUserCmd(String taskId){
         this.taskId=taskId;
     }
 

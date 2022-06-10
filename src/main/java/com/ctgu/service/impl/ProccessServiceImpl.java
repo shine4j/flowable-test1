@@ -7,7 +7,7 @@ import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.model.BO.pager.PageQueryBO;
 import com.ctgu.model.BO.pager.PagerModel;
 import com.ctgu.model.PO.RolePO;
-import com.ctgu.cmd.TaskApplyUserCmd;
+import com.ctgu.cmd.ApplyUserCmd;
 import com.ctgu.service.IProcessService;
 import com.ctgu.util.FlowProcessDiagramGenerator;
 import com.github.pagehelper.Page;
@@ -19,8 +19,6 @@ import org.flowable.engine.*;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.runtime.ProcessInstance;
-import org.flowable.task.api.history.HistoricTaskInstance;
-import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -106,7 +104,7 @@ public class ProccessServiceImpl implements IProcessService {
                     if (null!=o.get("assignee")) {
                         map.put("assign",o.get("assignee"));
                     } else {
-                        List<RolePO> roles = managementService.executeCommand(new TaskApplyUserCmd(o.get("id").toString()));
+                        List<RolePO> roles = managementService.executeCommand(new ApplyUserCmd(o.get("id").toString()));
                         map.put("assign", JSON.toJSONString(roles));
                     }
                     tasks.add(map);

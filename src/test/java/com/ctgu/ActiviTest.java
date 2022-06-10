@@ -4,7 +4,7 @@ package com.ctgu;
 import com.alibaba.fastjson.JSON;
 import com.ctgu.dao.ProcessDao;
 import com.ctgu.model.PO.RolePO;
-import com.ctgu.cmd.TaskApplyUserCmd;
+import com.ctgu.cmd.ApplyUserCmd;
 import com.ctgu.dao.HisFlowableActinstDao;
 import com.ctgu.dao.RunFlowableActinstDao;
 import org.flowable.bpmn.model.*;
@@ -375,7 +375,7 @@ public class ActiviTest {
                 logger.info("ActivityName:{}",k.getActivityName());
                 logger.info("taskId:{}",k.getTaskId());
                 if(StringUtils.isBlank(k.getAssignee())){
-                    List<RolePO> users = managementService.executeCommand(new TaskApplyUserCmd(k.getTaskId()));
+                    List<RolePO> users = managementService.executeCommand(new ApplyUserCmd(k.getTaskId()));
                     logger.info("当前审批人：{}", JSON.toJSONString(users));
                 }else{
                     logger.info("当前审批人：{}", k.getAssignee());
@@ -394,7 +394,7 @@ public class ActiviTest {
         if(!StringUtils.isBlank(list.get(0).getAssignee())){
             logger.info("上个节点的审批人：{}",list.get(0).getAssignee());
         }else{
-            List<RolePO> users = managementService.executeCommand(new TaskApplyUserCmd(list.get(0).getId()));
+            List<RolePO> users = managementService.executeCommand(new ApplyUserCmd(list.get(0).getId()));
             logger.info("上个节点审批人：{}", JSON.toJSONString(users));
         }
 
@@ -476,7 +476,7 @@ public class ActiviTest {
                     Map<String, Object> map = new HashMap<>();
                     map.put("nodeName", o.get("nodeName"));
                     if (null!=o.get("assignee")) {
-                        List<RolePO> roles = managementService.executeCommand(new TaskApplyUserCmd(o.get("id").toString()));
+                        List<RolePO> roles = managementService.executeCommand(new ApplyUserCmd(o.get("id").toString()));
                         map.put("assign", JSON.toJSONString(roles));
                     } else {
                         map.put("assign",o.get("assignee"));
