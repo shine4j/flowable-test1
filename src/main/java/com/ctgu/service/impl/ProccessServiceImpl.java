@@ -1,6 +1,7 @@
 package com.ctgu.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.ctgu.cmd.ProcessCommentCmd;
 import com.ctgu.dao.ProcessDao;
 import com.ctgu.model.BO.ProcessQueryBO;
 import com.ctgu.model.BO.ResultMsgBO;
@@ -19,6 +20,7 @@ import org.flowable.engine.*;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.engine.task.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -126,5 +128,9 @@ public class ProccessServiceImpl implements IProcessService {
         return new PagerModel<Map>(taskIng);
     }
 
-
+    @Override
+    public List<Map> getComment(String processInstanceId) {
+        List<Map> comments = managementService.executeCommand(new ProcessCommentCmd(processInstanceId));
+        return comments;
+    }
 }

@@ -84,8 +84,8 @@ public class TaskController {
     public ResultMsgBO handle(@RequestBody TaskHandleBO model){
         String type = TaskHandleEnum.getServiceByType(model.getType());
         TaskBaseHandle baseHandle=ApplicationContextUtils.popBean(type);
+        baseHandle.setManagementService(managementService);
         baseHandle.execute(model);
-        managementService.executeCommand(new AddCommentCmd(model.getComment()));
         return new ResultMsgBO(0,"ok",null);
     }
 

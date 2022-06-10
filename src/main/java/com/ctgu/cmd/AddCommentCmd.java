@@ -9,6 +9,8 @@ import org.flowable.engine.task.Comment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+
 
 /**
  * @Author beck_guo
@@ -18,11 +20,7 @@ import org.slf4j.LoggerFactory;
 
 public class AddCommentCmd implements Command<Comment> {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
-
     private AddCommentBO commentBO;
-
-
 
     public AddCommentCmd(AddCommentBO commentBO) {
         this.commentBO = commentBO;
@@ -35,6 +33,7 @@ public class AddCommentCmd implements Command<Comment> {
         comment.setProcessInstanceId(commentBO.getProcessId());
         comment.setTaskId(commentBO.getTaskId());
         comment.setMessage(commentBO.getMessage());
+        comment.setTime(new Date());
         CommandContextUtil.getCommentEntityManager(commandContext)
                 .insert(comment);
         return comment;

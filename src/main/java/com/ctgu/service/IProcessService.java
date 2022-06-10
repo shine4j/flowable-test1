@@ -5,9 +5,11 @@ import com.ctgu.model.BO.ResultMsgBO;
 import com.ctgu.model.BO.TaskQueryBO;
 import com.ctgu.model.BO.pager.PageQueryBO;
 import com.ctgu.model.BO.pager.PagerModel;
+import org.flowable.engine.task.Comment;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,5 +40,8 @@ public interface IProcessService {
      */
     ResultMsgBO applyNodes(String processInstanceId);
 
-
+    /**
+     *实例的审批记录
+     */
+    List<Map> getComment(String processInstanceId);
 }
