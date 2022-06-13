@@ -57,8 +57,8 @@
             RES.PROC_INST_ID_  AS processId,
             p.name_ as subject,
             RES.NAME_ as name,
-            RES.START_TIME_ as startTime,
-            RES.END_TIME_ as endTime
+            DATE_FORMAT(RES.START_TIME_,'%Y/%m/%d %H:%i:%s') as startTime,
+            DATE_FORMAT(RES.END_TIME_,'%Y/%m/%d %H:%i:%s') as endTime
         FROM
             ACT_HI_TASKINST RES
             LEFT JOIN act_hi_procinst p ON RES.PROC_INST_ID_ = p.PROC_INST_ID_
@@ -73,7 +73,7 @@
         SELECT DISTINCT
             RES.PROC_INST_ID_  AS processId,
             RES.NAME_ AS subject,
-            RES.START_TIME_ AS startTime,
+            DATE_FORMAT(RES.START_TIME_,'%Y/%m/%d %H:%i:%s') AS startTime,
             res.END_TIME_ AS endTime,
             DEF.KEY_ AS PROC_DEF_KEY_,
             DEF.NAME_ AS PROC_DEF_NAME_,
@@ -94,7 +94,7 @@
             p.NAME_ AS subject,
             RES.PROC_INST_ID_ as processId,
             RES.NAME_ name,
-            RES.CREATE_TIME_ as createTime
+            DATE_FORMAT(RES.CREATE_TIME_,'%Y/%m/%d %H:%i:%s') as createTime
         FROM
             ACT_RU_TASK RES
             LEFT JOIN act_hi_procinst p ON RES.PROC_INST_ID_ = p.PROC_INST_ID_
@@ -107,7 +107,7 @@
             RES.NAME_ as name,
             p.NAME_ AS subject,
             RES.START_TIME_ AS startTime,
-            RES.END_TIME_ AS endTime,
+            DATE_FORMAT(RES.END_TIME_,'%Y/%m/%d %H:%i:%s') AS endTime,
             RES.ID_ AS taskId,
             RES.PROC_INST_ID_ AS processId
         FROM

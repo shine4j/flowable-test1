@@ -24,8 +24,8 @@
             RES.ID_ AS id,
             p.NAME_ AS subject,
             RES.START_USER_ID_ AS startUserId,
-            RES.START_TIME_ AS startTime,
-            RES.END_TIME_ AS endTime,
+            DATE_FORMAT(RES.START_TIME_,'%Y/%m/%d %H:%i:%s') AS startTime,
+            DATE_FORMAT(RES.END_TIME_,'%Y/%m/%d %H:%i:%s') AS endTime,
             DEF.NAME_ AS definitionName
         FROM
             ACT_HI_PROCINST RES
