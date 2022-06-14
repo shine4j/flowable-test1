@@ -106,7 +106,7 @@
         SELECT DISTINCT
             RES.NAME_ as name,
             p.NAME_ AS subject,
-            RES.START_TIME_ AS startTime,
+            DATE_FORMAT(RES.START_TIME_,'%Y/%m/%d %H:%i:%s') AS startTime,
             DATE_FORMAT(RES.END_TIME_,'%Y/%m/%d %H:%i:%s') AS endTime,
             RES.ID_ AS taskId,
             RES.PROC_INST_ID_ AS processId
