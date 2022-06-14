@@ -36,14 +36,14 @@ public class TaskHangOrActivation extends TaskBaseHandle {
     @Override
     public void handle(TaskHandleBO model) {
         ProcessInstance instance = runtimeService.createProcessInstanceQuery()
-                .processInstanceId(model.getProccessId())
+                .processInstanceId(model.getProcessId())
                 .singleResult();
         Map<String, Object> map = new HashMap<>();
         if(instance.isSuspended()){
-            runtimeService.activateProcessInstanceById(model.getProccessId());
+            runtimeService.activateProcessInstanceById(model.getProcessId());
             map.put("status","suspended");
         }else{
-            runtimeService.suspendProcessInstanceById(model.getProccessId());
+            runtimeService.suspendProcessInstanceById(model.getProcessId());
             map.put("status","activate");
         }
     }

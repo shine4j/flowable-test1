@@ -37,13 +37,13 @@ public class TaskStop extends TaskBaseHandle {
 
     @Override
     public void handle(TaskHandleBO model) {
-        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(model.getProccessId()).singleResult();
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(model.getProcessId()).singleResult();
         BpmnModel bpmnModel = repositoryService.getBpmnModel((processInstance.getProcessDefinitionId()));
         Process process = bpmnModel.getMainProcess();
         List<EndEvent> endNodes = process.findFlowElementsOfType(EndEvent.class);
         String endId = endNodes.get(0).getId();
         //3、执行终止
-        List<Execution> executions = runtimeService.createExecutionQuery().parentId(model.getProccessId()).list();
+        List<Execution> executions = runtimeService.createExecutionQuery().parentId(model.getProcessId()).list();
         List<String> executionIds = new ArrayList<>();
         executions.forEach(execution -> executionIds.add(execution.getId()));
         runtimeService.createChangeActivityStateBuilder()

@@ -22,6 +22,7 @@ public class TaskTransferOrDelegate extends TaskBaseHandle {
     @Override
     public void handle(TaskHandleBO model) {
         TaskEntityImpl task = (TaskEntityImpl) taskService.createTaskQuery().taskId(model.getTaskId()).singleResult();
+        task.setOwner(model.getComment().getUserId());
         task.setScopeType(model.getType());
         taskService.saveTask(task);
         taskService.delegateTask(model.getTaskId(), model.getAssign());

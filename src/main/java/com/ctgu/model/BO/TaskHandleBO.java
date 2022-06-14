@@ -16,7 +16,7 @@ public class TaskHandleBO {
 
     private String taskId;
 
-    private String proccessId;
+    private String processId;
 
     private List<String> users;
 
