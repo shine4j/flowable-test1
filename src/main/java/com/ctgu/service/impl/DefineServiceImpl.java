@@ -13,6 +13,7 @@ import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import java.util.Map;
  * @description
  */
 @Service
+@Transactional
 public class DefineServiceImpl implements IDefineService {
 
     @Autowired

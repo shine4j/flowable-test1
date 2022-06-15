@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ctgu.dao.LeaveDao" >
+
+    <insert id="save" parameterType="com.ctgu.model.PO.LeavePO">
+        insert ctgu_leave(start_time,end_time,remark,user_id)
+                values (#{startTime},#{endTime},#{remark}，#{userId})
+    </insert>
+
+    <delete id="del" parameterType="int">
+        delete ctgu_leave s where s.id=#{id}
+    </delete>
+
+    <update id="update">
+        update ctgu_leave s
+        set    s.start_time=#{startTime},
+               s.end_time=#{endTime},
+               s.remark=#{remark}
+        where  s.id=#{id}
+    </update>
+
+    <select id="getById" parameterType="int" resultType="com.ctgu.model.PO.LeavePO">
+        select * from ctgu_leave s where s.id=#{id}
+    </select>
+</mapper>
