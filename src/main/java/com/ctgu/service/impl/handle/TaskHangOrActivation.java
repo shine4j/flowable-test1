@@ -2,11 +2,8 @@ package com.ctgu.service.impl.handle;
 
 import com.ctgu.model.BO.TaskHandleBO;
 import com.ctgu.service.TaskBaseHandle;
-import com.ctgu.util.FlowProcessDiagramGenerator;
-import com.ctgu.util.TaskUtils;
 import org.flowable.engine.*;
 import org.flowable.engine.runtime.ProcessInstance;
-import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

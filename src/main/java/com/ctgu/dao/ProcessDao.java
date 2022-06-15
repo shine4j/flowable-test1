@@ -1,7 +1,6 @@
 package com.ctgu.dao;
 
 import com.ctgu.model.BO.ProcessQueryBO;
-import com.ctgu.model.BO.TaskQueryBO;
 import com.github.pagehelper.Page;
 
 import java.util.List;
