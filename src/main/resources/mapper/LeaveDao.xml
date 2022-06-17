@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ctgu.dao.LeaveDao" >
 
-    <insert id="save" parameterType="com.ctgu.model.PO.LeavePO">
-        insert ctgu_leave(start_time,end_time,remark,user_id)
-                values (#{startTime},#{endTime},#{remark}，#{userId})
+    <insert id="save" parameterType="com.ctgu.model.PO.flow.LeavePO">
+        insert ctgu_leave(subject,start_time,end_time,remark,user_id)
+                values (#{subject},#{startTime},#{endTime},#{remark},#{username})
     </insert>
 
     <delete id="del" parameterType="int">
@@ -19,7 +19,7 @@
         where  s.id=#{id}
     </update>
 
-    <select id="getById" parameterType="int" resultType="com.ctgu.model.PO.LeavePO">
+    <select id="getById" parameterType="int" resultType="com.ctgu.model.PO.flow.LeavePO">
         select * from ctgu_leave s where s.id=#{id}
     </select>
 </mapper>

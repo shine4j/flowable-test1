@@ -1,7 +1,10 @@
 package com.ctgu;
 
 import com.alibaba.fastjson.JSON;
+import com.ctgu.dao.BaseBusinessDao;
+import com.ctgu.dao.LeaveDao;
 import com.ctgu.model.types.TaskHandleEnum;
+import com.ctgu.util.ApplicationContextUtils;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.Deployment;
 import org.junit.jupiter.api.Test;
@@ -28,6 +31,9 @@ public class OtherTest {
     @Autowired
     private RepositoryService repositoryService;
 
+    @Autowired
+    private LeaveDao leaveDao;
+
     public void t1(){
         logger.info("==={}", TaskHandleEnum.getServiceByType("COMPLETE"));
     }
@@ -47,6 +53,8 @@ public class OtherTest {
 
     @Test
     public void test(){
-        define();
+        leaveDao.getById(1);
+        BaseBusinessDao ss = ApplicationContextUtils.popBean("leaveDao");
+        logger.info("============");
     }
 }

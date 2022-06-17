@@ -12,5 +12,5 @@ public class AddFlowBO {
     private String key;
     private String username;
     private String subject;
-
+    private Object flow;
 }

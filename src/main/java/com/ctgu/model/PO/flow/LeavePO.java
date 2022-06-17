@@ -1,5 +1,6 @@
-package com.ctgu.model.PO;
+package com.ctgu.model.PO.flow;
 
+import com.ctgu.model.PO.BaseBusinessPO;
 import lombok.Data;
 
 /**
@@ -8,7 +9,7 @@ import lombok.Data;
  * @description 请假实体类
  */
 @Data
-public class LeavePO extends BaseBusinessPO{
+public class LeavePO extends BaseBusinessPO {
 
     private String startTime;
 
@@ -16,7 +17,7 @@ public class LeavePO extends BaseBusinessPO{
 
     private String remark;
 
-    private String userId;
+    private String username;
 
 
 }

@@ -24,7 +24,7 @@ public class DefineController {
     }
 
     @PostMapping(value = "start")
-    public ResultMsgBO startByKey(@RequestBody AddFlowBO model) {
+    public ResultMsgBO startByKey(@RequestBody AddFlowBO model) throws Exception {
         return iDefineService.startByKey(model);
     }
 }

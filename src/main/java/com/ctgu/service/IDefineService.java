@@ -2,6 +2,7 @@ package com.ctgu.service;
 
 import com.ctgu.model.BO.AddFlowBO;
 import com.ctgu.model.BO.ResultMsgBO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * @Author beck_guo
@@ -15,5 +16,5 @@ public interface IDefineService {
     /**
      *启动流程
      */
-    ResultMsgBO startByKey(AddFlowBO model);
+    ResultMsgBO startByKey(AddFlowBO model) throws ClassNotFoundException, JsonProcessingException, Exception;
 }

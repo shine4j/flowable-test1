@@ -1,6 +1,6 @@
 package com.ctgu.dao;
 
-import com.ctgu.model.PO.LeavePO;
+import com.ctgu.model.PO.flow.LeavePO;
 
 /**
  * @Author beck_guo
