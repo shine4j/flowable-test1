@@ -86,7 +86,6 @@ public class DefineServiceImpl implements IDefineService {
             Object instance1 = forName.newInstance();
             ObjectMapper mapper = new ObjectMapper();
             BaseBusinessPO flowPo = (BaseBusinessPO) mapper.readValue(JSON.toJSONString(model.getFlow()),instance1.getClass());
-
             businessDao.save(flowPo);
         }
         return new ResultMsgBO(0, "ok", null);
