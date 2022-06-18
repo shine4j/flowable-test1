@@ -65,18 +65,6 @@ public class DefineServiceImpl implements IDefineService {
     @SneakyThrows
     @Override
     public ResultMsgBO startByKey(AddFlowBO model) throws Exception{
-        identityService.setAuthenticatedUserId(model.getUsername());
-        Map<String, Object> varMap = new HashMap<>();
-        varMap.put("initiator", "");
-        varMap.put("skip", true);
-        varMap.put("_FLOWABLE_SKIP_EXPRESSION_ENABLED", true);
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey(model.getKey(), varMap);
-        runtimeService.setProcessInstanceName(instance.getId(), model.getSubject());
-        AddCommentBO comment = new AddCommentBO();
-        comment.setProcessId(instance.getId());
-        comment.setUserId(model.getUsername());
-        comment.setMessage(model.getUsername() + "提交流程");
-        managementService.executeCommand(new AddCommentCmd(comment));
         if (null != model.getFlow()) {
             String bean = model.getKey() + "Dao";
             BaseBusinessDao businessDao = ApplicationContextUtils.popBean(bean);
@@ -87,6 +75,18 @@ public class DefineServiceImpl implements IDefineService {
             ObjectMapper mapper = new ObjectMapper();
             BaseBusinessPO flowPo = (BaseBusinessPO) mapper.readValue(JSON.toJSONString(model.getFlow()),instance1.getClass());
             businessDao.save(flowPo);
+            identityService.setAuthenticatedUserId(model.getUsername());
+            Map<String, Object> varMap = new HashMap<>();
+            varMap.put("initiator", "");
+            varMap.put("skip", true);
+            varMap.put("_FLOWABLE_SKIP_EXPRESSION_ENABLED", true);
+            ProcessInstance instance = runtimeService.startProcessInstanceByKey(model.getKey(),flowPo.getId().toString(), varMap);
+            runtimeService.setProcessInstanceName(instance.getId(), model.getSubject());
+            AddCommentBO comment = new AddCommentBO();
+            comment.setProcessId(instance.getId());
+            comment.setUserId(model.getUsername());
+            comment.setMessage(model.getUsername() + "提交流程");
+            managementService.executeCommand(new AddCommentCmd(comment));
         }
         return new ResultMsgBO(0, "ok", null);
     }

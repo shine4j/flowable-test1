@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ctgu.dao.LeaveDao" >
 
-    <insert id="save" parameterType="com.ctgu.model.PO.flow.LeavePO">
+    <insert id="save" parameterType="com.ctgu.model.PO.flow.LeavePO" useGeneratedKeys="true" keyProperty="id">
         insert ctgu_leave(subject,start_time,end_time,remark,user_id)
                 values (#{subject},#{startTime},#{endTime},#{remark},#{username})
     </insert>
