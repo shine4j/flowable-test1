@@ -6,6 +6,7 @@
         SELECT DISTINCT
             RES.PROC_INST_ID_ as id,
             s.NAME_ AS subject,
+            s.BUSINESS_KEY_ AS businessKey,
             p.NAME_  as definitionName,
             RES.START_USER_ID_ AS startUserId,
             RES.SUSPENSION_STATE_ as suspensionState
@@ -23,6 +24,7 @@
         SELECT DISTINCT
             RES.ID_ AS id,
             p.NAME_ AS subject,
+            s.BUSINESS_KEY_ AS businessKey,
             RES.START_USER_ID_ AS startUserId,
             DATE_FORMAT(RES.START_TIME_,'%Y/%m/%d %H:%i:%s') AS startTime,
             DATE_FORMAT(RES.END_TIME_,'%Y/%m/%d %H:%i:%s') AS endTime,

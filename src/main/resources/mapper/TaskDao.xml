@@ -56,6 +56,7 @@
         SELECT DISTINCT
             RES.PROC_INST_ID_  AS processId,
             p.name_ as subject,
+            p.BUSINESS_KEY_ AS businessKey,
             RES.NAME_ as name,
             DATE_FORMAT(RES.START_TIME_,'%Y/%m/%d %H:%i:%s') as startTime,
             DATE_FORMAT(RES.END_TIME_,'%Y/%m/%d %H:%i:%s') as endTime
@@ -73,6 +74,7 @@
         SELECT DISTINCT
             RES.PROC_INST_ID_  AS processId,
             RES.NAME_ AS subject,
+            RES.BUSINESS_KEY_ AS businessKey,
             DATE_FORMAT(RES.START_TIME_,'%Y/%m/%d %H:%i:%s') AS startTime,
             res.END_TIME_ AS endTime,
             DEF.KEY_ AS PROC_DEF_KEY_,
@@ -92,6 +94,7 @@
         SELECT DISTINCT
             RES.ID_ AS taskId,
             p.NAME_ AS subject,
+            p.BUSINESS_KEY_ AS businessKey,
             RES.PROC_INST_ID_ as processId,
             RES.NAME_ name,
             DATE_FORMAT(RES.CREATE_TIME_,'%Y/%m/%d %H:%i:%s') as createTime
@@ -106,6 +109,7 @@
         SELECT DISTINCT
             RES.NAME_ as name,
             p.NAME_ AS subject,
+            p.BUSINESS_KEY_ AS businessKey,
             DATE_FORMAT(RES.START_TIME_,'%Y/%m/%d %H:%i:%s') AS startTime,
             DATE_FORMAT(RES.END_TIME_,'%Y/%m/%d %H:%i:%s') AS endTime,
             RES.ID_ AS taskId,
