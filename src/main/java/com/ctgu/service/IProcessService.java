@@ -44,4 +44,9 @@ public interface IProcessService {
      *实例的审批记录
      */
     List<Map> getComment(String processInstanceId);
+
+    /**
+     * 取当前节点审批人
+     */
+    List<Map> getCurrenNodeUser(String processInstanceId);
 }

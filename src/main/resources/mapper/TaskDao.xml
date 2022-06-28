@@ -101,6 +101,7 @@
         FROM
             ACT_RU_TASK RES
             LEFT JOIN act_hi_procinst p ON RES.PROC_INST_ID_ = p.PROC_INST_ID_
+        where res.OWNER_ is null or RES.ASSIGNEE_ is not null
         ORDER BY
             RES.CREATE_TIME_ desc
     </select>

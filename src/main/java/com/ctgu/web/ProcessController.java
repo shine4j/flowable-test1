@@ -53,4 +53,10 @@ public class ProcessController {
         return  new ResultMsgBO(0,"ok",comment);
     }
 
+    @GetMapping(value = "getCurrenNodeUser/{processInstanceId}")
+    public ResultMsgBO getCurrenNodeUser(String processInstanceId){
+        List<Map> nodeUser = iProcessService.getCurrenNodeUser(processInstanceId);
+        return  new ResultMsgBO(0,"ok",nodeUser);
+    }
+
 }

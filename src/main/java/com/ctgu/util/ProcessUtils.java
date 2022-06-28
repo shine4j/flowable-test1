@@ -1,4 +1,4 @@
-package com.ctgu;
+package com.ctgu.util;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
@@ -8,22 +8,25 @@ import org.flowable.engine.TaskService;
 import org.flowable.identitylink.api.IdentityLink;
 import org.flowable.idm.api.User;
 import org.flowable.task.api.Task;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author beck_guo
- * @create 2022/6/23 11:32
+ * @create 2022/6/28 10:49
  * @description
  */
-@SpringBootTest
-public class ApproversTest {
+@Component
+public class ProcessUtils {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -37,25 +40,23 @@ public class ApproversTest {
 
     public List<Map> getApprovers(String processInstanceId) {
         List<Map> mps=new ArrayList<>();
-        List<Map> users = new ArrayList<>();
         List<Task> list = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
         if (CollectionUtils.isNotEmpty(list)) {
             list.stream().filter(s->s.getOwner()==null||s.getAssignee()!=null).forEach(task -> {
-                Map newUser=new HashMap();
-                newUser.put("startTime",sdf.format(task.getCreateTime()));
+                List<String> newUser=new ArrayList<>();
                 if (StringUtils.isNotBlank(task.getAssignee())) {
                     //1.审批人ASSIGNEE_是用户id
                     User user = identityService.createUserQuery().userId(task.getAssignee()).singleResult();
                     if (user != null) {
-                        newUser.put("username",user.getLastName()+user.getFirstName());
-                        users.add(newUser);
+                        String username=user.getLastName()+user.getFirstName();
+                        newUser.add(username);
                     }
                     //2.审批人ASSIGNEE_是组id
                     List<User> gusers = identityService.createUserQuery().memberOfGroup(task.getAssignee()).list();
                     if (CollectionUtils.isNotEmpty(gusers)) {
                         gusers.forEach(o->{
-                            newUser.put("username",o.getLastName()+o.getFirstName());
-                            users.add(newUser);
+                            String username=user.getLastName()+user.getFirstName();
+                            newUser.add(username);
                         });
                     }
                 } else {
@@ -66,16 +67,16 @@ public class ApproversTest {
                             if (StringUtils.isNotBlank(identityLink.getUserId())) {
                                 User user = identityService.createUserQuery().userId(identityLink.getUserId()).singleResult();
                                 if (user != null) {
-                                    newUser.put("username",user.getLastName()+user.getFirstName());
-                                    users.add(newUser);
+                                    String username=user.getLastName()+user.getFirstName();
+                                    newUser.add(username);
                                 }
                             } else {
                                 //4.审批人ASSIGNEE_为空,组id
                                 List<User> gusers = identityService.createUserQuery().memberOfGroup(identityLink.getGroupId()).list();
                                 if (CollectionUtils.isNotEmpty(gusers)) {
                                     gusers.forEach(o->{
-                                        newUser.put("username",o.getLastName()+o.getFirstName());
-                                        users.add(newUser);
+                                        String username=o.getLastName()+o.getFirstName();
+                                        newUser.add(username);
                                     });
                                 }
                             }
@@ -83,17 +84,12 @@ public class ApproversTest {
                     }
                 }
                 Map mp=new HashMap();
-                mp.put("节点名称",task.getName());
-                mp.put("审批人",users);
+                mp.put("startTime",sdf.format(task.getCreateTime()));
+                mp.put("nodeName",task.getName());
+                mp.put("user", newUser);
                 mps.add(mp);
             });
         }
         return mps;
-    }
-
-    @Test
-    public void t(){
-        List<Map> users = getApprovers("a9acfee6-f6ab-11ec-976e-025041000001");
-        logger.info("users:{}", JSON.toJSONString(users));
     }
 }

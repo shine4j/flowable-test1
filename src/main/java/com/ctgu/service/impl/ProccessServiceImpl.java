@@ -11,6 +11,7 @@ import com.ctgu.model.PO.RolePO;
 import com.ctgu.cmd.ApplyUserCmd;
 import com.ctgu.service.IProcessService;
 import com.ctgu.util.FlowProcessDiagramGenerator;
+import com.ctgu.util.ProcessUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.flowable.bpmn.constants.BpmnXMLConstants;
@@ -56,6 +57,9 @@ public class ProccessServiceImpl implements IProcessService {
 
     @Autowired
     private ProcessDao processDao;
+
+    @Autowired
+    private ProcessUtils processUtils;
 
     @Override
     public void getImage(String processInstanceId, HttpServletResponse response) throws IOException {
@@ -131,5 +135,10 @@ public class ProccessServiceImpl implements IProcessService {
     public List<Map> getComment(String processInstanceId) {
         List<Map> comments = managementService.executeCommand(new ProcessCommentCmd(processInstanceId));
         return comments;
+    }
+
+    @Override
+    public List<Map> getCurrenNodeUser(String processInstanceId) {
+        return processUtils.getApprovers(processInstanceId);
     }
 }
